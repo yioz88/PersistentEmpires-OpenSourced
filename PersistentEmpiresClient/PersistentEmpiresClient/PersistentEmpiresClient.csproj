@@ -1,0 +1,176 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TaleworldsReferencePath>..\..\PersistentEmpiresLib\PersistentEmpiresLib\ClientReferences</TaleworldsReferencePath>
+		<ProjectGuid>{03A0BEA7-F985-4752-9272-D6A994225587}</ProjectGuid>
+		<AssemblyTitle>PersistentEmpiresClient</AssemblyTitle>
+		<Product>PersistentEmpiresClient</Product>
+		<Copyright>Copyright © 2023</Copyright>
+		<TargetFramework>net472</TargetFramework>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<DebugType>full</DebugType>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<DefineConstants>TRACE;DEBUG;CLIENT</DefineConstants>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DefineConstants />
+		<DefineConstants>TRACE;CLIENT</DefineConstants>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	  <None Include="$(TaleworldsReferencePath)\discord_game_sdk.dll" Link="discord_game_sdk.dll">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Reference Include="System.Web" />
+		<Reference Include="System.Data.DataSetExtensions" />
+		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="System.Net.Http" />
+		<Reference Include="TaleWorlds.Core">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Core.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Core.ViewModelCollection">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Core.ViewModelCollection.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Diamond">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Diamond.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.DotNet">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.DotNet.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Engine">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Engine.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Engine.GauntletUI">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Engine.GauntletUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.GauntletUI">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.GauntletUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.GauntletUI.Data">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.GauntletUI.Data.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.GauntletUI.TooltipExtensions">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.GauntletUI.TooltipExtensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.InputSystem">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.InputSystem.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Library">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Library.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Localization">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Localization.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.ModuleManager">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.ModuleManager.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Diamond">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.Diamond.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.ViewModelCollection">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.ViewModelCollection.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.ObjectSystem">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.ObjectSystem.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.PlatformService">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.PlatformService.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.PlayerServices">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.PlayerServices.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.ScreenSystem">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.ScreenSystem.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.TwoDimension">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.TwoDimension.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.GauntletUI">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.GauntletUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.0">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.0.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.1">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.1.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Platform.PC">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.Platform.PC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.View">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.View.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Multiplayer">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.Multiplayer.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Multiplayer.GauntletUI">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.Multiplayer.GauntletUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Multiplayer.GauntletUI.AutoGenerated">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.Multiplayer.GauntletUI.AutoGenerated.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Multiplayer.View">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.Multiplayer.View.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Multiplayer.ViewModelCollection">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.Multiplayer.ViewModelCollection.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+		
+	<ItemGroup>
+		<ProjectReference Include="..\..\PersistentEmpiresLib\PersistentEmpiresLib\PersistentEmpiresLib.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Concentus" Version="1.1.7" />
+		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
+		<PackageReference Include="NAudio" Version="2.2.1" />
+		<PackageReference Include="RestSharp.Newtonsoft.Json" Version="1.5.1" />
+		<PackageReference Include="SharpRaven" Version="2.4.0" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+		<Exec Command="del &quot;$(TargetDir)*.pdb&quot;" />
+	</Target>
+</Project>
