@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<RootNamespace>PersistentEmpiresSave</RootNamespace>
+		<AssemblyName>PersistentEmpiresSave</AssemblyName>
+		<TaleworldsReferencePath>..\..\PersistentEmpiresLib\PersistentEmpiresLib\ServerReferences</TaleworldsReferencePath>
+		<LangVersion>7.3</LangVersion>
+		<Product>Persistent Empires Save</Product>
+		<Copyright>Copyright © 2023</Copyright>
+		<ProjectGuid>{E7533096-D455-44A4-89EA-1D50BB3A82A0}</ProjectGuid>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<DefineConstants>DEBUG;TRACE;SERVER</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DefineConstants>TRACE;SERVER</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System.IdentityModel" />
+		<Reference Include="System.Transactions" />
+		<Reference Include="TaleWorlds.Core">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Core.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.DotNet">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.DotNet.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Engine">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Engine.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Library">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.Library.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.ModuleManager">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.ModuleManager.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.MountAndBlade.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.ObjectSystem">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.ObjectSystem.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.PlayerServices">
+			<HintPath>$(TaleworldsReferencePath)\TaleWorlds.PlayerServices.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+		<PackageReference Include="MySqlConnector" Version="1.3.14" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\PersistentEmpiresLib\PersistentEmpiresLib\PersistentEmpiresLib.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+		<Exec Command="del &quot;$(TargetDir)*.pdb&quot;" />
+	</Target>
+</Project>
