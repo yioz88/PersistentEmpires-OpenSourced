@@ -1,0 +1,145 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<RootNamespace>PersistentEmpiresLib</RootNamespace>
+		<AssemblyTitle>PersistentEmpiresLib</AssemblyTitle>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<LangVersion>7.3</LangVersion>
+		<Product>PersistentEmpiresLib</Product>
+		<Copyright>Copyright © 2023</Copyright>
+		<ProjectGuid>{EFF0BC43-D180-45A5-AEEB-94A21D052377}</ProjectGuid>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<Configurations>RunAsClientDebug;RunAsServerDebug;ReleaseClient;ReleaseServer</Configurations>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'RunAsClientDebug' ">
+		<ReferenceFolder>.\ClientReferences</ReferenceFolder>
+		<OutputType>Library</OutputType>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<DefineConstants>TRACE;DEBUG;CLIENT</DefineConstants>
+		<DebugType>portable</DebugType>
+		<Prefer32Bit>false</Prefer32Bit>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'RunAsServerDebug' ">
+		<ReferenceFolder>.\ServerReferences</ReferenceFolder>
+		<OutputType>Library</OutputType>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<DefineConstants>DEBUG;TRACE;SERVER</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<DebugType>portable</DebugType>
+		<Prefer32Bit>false</Prefer32Bit>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'ReleaseClient'">
+		<ReferenceFolder>.\ClientReferences</ReferenceFolder>
+		<OutputType>Library</OutputType>
+		<Optimize>true</Optimize>
+		<DefineConstants>TRACE;CLIENT</DefineConstants>
+		<DebugType>portable</DebugType>
+		<Prefer32Bit>false</Prefer32Bit>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'ReleaseServer'">
+		<ReferenceFolder>.\ServerReferences</ReferenceFolder>
+		<OutputType>Library</OutputType>
+		<Optimize>true</Optimize>
+		<DefineConstants>TRACE;SERVER</DefineConstants>
+		<DebugType>portable</DebugType>
+		<Prefer32Bit>false</Prefer32Bit>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BouncyCastle" Version="1.8.9" />
+		<PackageReference Include="RestSharp.Newtonsoft.Json" Version="1.5.1" />
+		<PackageReference Include="Websocket.Client" Version="4.7.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="System" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Web" />
+		<Reference Include="System.Windows" />
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System.Xml.Linq" />
+		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Net.Http" />
+		<Reference Include="System.Xml" />
+		<Reference Include="WindowsBase" />
+		<Reference Include="TaleWorlds.MountAndBlade.DedicatedCustomServer">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.MountAndBlade.DedicatedCustomServer.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Multiplayer">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.MountAndBlade.Multiplayer.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Diamond">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.Diamond.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.ObjectSystem">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.ObjectSystem.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.DotNet">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.DotNet.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade.Diamond">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.MountAndBlade.Diamond.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Core">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.Core.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Engine">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.Engine.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.InputSystem">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.InputSystem.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Library">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.Library.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.Localization">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.Localization.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.ModuleManager">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.ModuleManager.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.MountAndBlade">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.MountAndBlade.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="TaleWorlds.PlayerServices">
+			<HintPath>$(ReferenceFolder)\TaleWorlds.PlayerServices.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="app.config" />
+		<None Include="Update_Bannerlord_DLLs.bat" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'ReleaseClient' Or '$(Configuration)' == 'ReleaseServer'">
+		<Exec Command="del &quot;$(TargetDir)*.pdb&quot;" />
+	</Target>
+</Project>
