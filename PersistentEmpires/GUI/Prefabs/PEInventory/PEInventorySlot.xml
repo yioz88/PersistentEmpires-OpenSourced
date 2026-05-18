@@ -1,0 +1,35 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="ItemDataSource" DefaultValue="" />
+    <Parameter Name="EquipmentIndex" DefaultValue="0" />
+    <Parameter Name="HorizontalAlignment" DefaultValue="Left" />
+  </Parameters>
+  <Constants>
+
+  </Constants>
+  <Window>
+    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="108" SuggestedWidth="108" DataSource="*ItemDataSource">
+      <Children>
+        <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Margin="-10" Sprite="StdAssets\frame_small" Color="@QualityGlowColor" />
+        <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Margin="-4" Sprite="StdAssets\frame_small" Color="@QualityFrameColor" />
+        <BrushWidget Id="Background" AcceptDrop="true" Command.Drop="RequestExecuteTransfer" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="StdAssets\frame_small" Color="@QualityFrameColor">
+          <Children>
+            <BrushWidget MarginLeft="8" MarginRight="8" MarginTop="8" MarginBottom="8" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="PE.InventorySlot.Background">
+              <Children>
+              </Children>
+            </BrushWidget>
+          </Children>
+        </BrushWidget>
+        <ButtonWidget HorizontalAlignment="*HorizontalAlignment" MarginLeft="16" MarginRight="16" MarginTop="26" Command.Click="ExecuteClickAction" Command.AlternateClick="ExecuteAlternateClick" AcceptDrag="true" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="72" Command.HoverBegin="ShowTooltip" Command.HoverEnd="HideTooltip" >
+          <Children>
+            <ImageIdentifierWidget Id="ImageIdentifier" DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" ImageTypeCode="@ImageTypeCode" TextureProviderName="@TextureProviderName">
+              <Children>
+                <TextWidget HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="10" MarginBottom="5" DataSource="{..}" IntText="@Count"></TextWidget>
+              </Children>
+            </ImageIdentifierWidget>
+          </Children>
+        </ButtonWidget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>
