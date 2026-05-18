@@ -1,4 +1,4 @@
-﻿using NetworkMessages.FromServer;
+using NetworkMessages.FromServer;
 using PersistentEmpiresLib;
 using PersistentEmpiresLib.Factions;
 using PersistentEmpiresLib.Helpers;
@@ -44,7 +44,12 @@ namespace PersistentEmpiresServer.SpawnBehavior
 
         public MatrixFrame GetSpawnFrame(NetworkCommunicator peer)
         {
-            if (WoundingBehavior.Instance.WoundingEnabled 
+            if (peer == null)
+            {
+                return MatrixFrame.Identity;
+            }
+            
+            if (WoundingBehavior.Instance != null && WoundingBehavior.Instance.WoundingEnabled 
                 && WoundingBehavior.Instance.IsPlayerWounded(peer)
                 && WoundingBehavior.Instance.DeathPlace.ContainsKey(peer))
             {
@@ -52,10 +57,17 @@ namespace PersistentEmpiresServer.SpawnBehavior
             }
 
             PersistentEmpireRepresentative persistentEmpireRepresentative = peer.GetComponent<PersistentEmpireRepresentative>();
-            PE_SpawnFrame frame;
+            PE_SpawnFrame frame = null;
+            
+            SpawnFrameSelectionBehavior spawnFrameBehavior = base.Mission?.GetMissionBehavior<SpawnFrameSelectionBehavior>();
+            List<PE_SpawnFrame> defaultFrames = spawnFrameBehavior?.DefaultSpawnFrames;
+            
             if (persistentEmpireRepresentative == null)
             {
-                frame = base.Mission.GetMissionBehavior<SpawnFrameSelectionBehavior>().DefaultSpawnFrames[0];
+                if (defaultFrames != null && defaultFrames.Count > 0)
+                {
+                    frame = defaultFrames[0];
+                }
             }
             else if (persistentEmpireRepresentative.GetNextSpawnFrame() == null)
             {
@@ -64,16 +76,33 @@ namespace PersistentEmpiresServer.SpawnBehavior
                 {
                     frame = spawnable[0];
                 }
-                else
+                else if (defaultFrames != null && defaultFrames.Count > 0)
                 {
-                    frame = base.Mission.GetMissionBehavior<SpawnFrameSelectionBehavior>().DefaultSpawnFrames[0];
+                    frame = defaultFrames[0];
                 }
             }
             else
             {
                 frame = persistentEmpireRepresentative.GetNextSpawnFrame();
-                if (frame.GetCastleBanner() != null && frame.GetCastleBanner().FactionIndex != persistentEmpireRepresentative.GetFactionIndex()) frame = base.Mission.GetMissionBehavior<SpawnFrameSelectionBehavior>().DefaultSpawnFrames[0];
+                PE_CastleBanner castleBanner = frame?.GetCastleBanner();
+                if (castleBanner != null && persistentEmpireRepresentative.GetFactionIndex() != castleBanner.FactionIndex)
+                {
+                    if (defaultFrames != null && defaultFrames.Count > 0)
+                    {
+                        frame = defaultFrames[0];
+                    }
+                    else
+                    {
+                        frame = null;
+                    }
+                }
             }
+            
+            if (frame == null || frame.GameEntity == null)
+            {
+                return MatrixFrame.Identity;
+            }
+            
             return frame.GameEntity.GetGlobalFrame();
         }
 
