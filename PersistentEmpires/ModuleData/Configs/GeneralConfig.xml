@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  GeneralConfig 示例：部署时复制为专服/客户端 Configs/GeneralConfig.xml。
+  - ConfigManager 合并多份 XML 时，同名节点只保留先加载的一份。
+  - 服端可 !reloadgeneralconfig 热读；部分项可由数据库 GameSettings 覆盖（见各节说明）。
+  - 与 pe_production / 面板 同名的键需与线上配置策略一致。
+-->
+<GeneralConfig>
+	<!-- ===== 自动重启专服进程（AutorestartBehavior）===== -->
+	<AutorestartActive>true</AutorestartActive><!-- 是否启用定时重启 -->
+	<AutorestartIntervalHours>24</AutorestartIntervalHours><!-- 间隔（小时） -->
+
+	<!-- ===== 语音与界面 ===== -->
+	<!-- 专用服 PeLocalized 解析语言（与 Languages/CNs/language_data.xml 的 id 一致） -->
+	<ServerDisplayLanguage>简体中文</ServerDisplayLanguage>
+	<!-- 原版语音聊天相关；Proximity 等会读此开关控制是否处理语音流 -->
+	<VoiceChatEnabled>false</VoiceChatEnabled>
+	<!-- 玩家头顶信息条（战力/爵位等）是否显示；关则全体不画 Agent 标签类 UI -->
+	<AgentLabelEnabled>true</AgentLabelEnabled>
+	<!-- 玩家自己是否看到自己头顶阵营旗子（3D 旗帜）；可由 GameSettings 表 ShowOwnOverheadBanner 覆盖 -->
+	<ShowOwnOverheadBanner>false</ShowOwnOverheadBanner>
+	<!-- 允许进入 PE 联机所需的最低客户端 PE 版本（四段 x.x.x.x）。若 GameSettings 有 RequiredModVersion 则常以数据库为准 -->
+	<RequiredModVersion>1.3.15.12</RequiredModVersion>
+
+	<!-- true = 不覆写投石机类爆炸伤害（走原版）；false = 使用 PE 伤害模型里对石炮等特殊处理（投石机命中逻辑） -->
+	<DontOverrideMangonelHit>false</DontOverrideMangonelHit>
+	<!-- 场景里 PE 动画点/互动动画总开关（AnimationBehavior） -->
+	<AnimationsEnabled>true</AnimationsEnabled>
+	<!-- 专服白名单：仅表内 SteamId 可进（WhitelistBehavior + 库表） -->
+	<WhitelistEnabled>true</WhitelistEnabled>
+	<!-- 断线重连是否沿用上次退出坐标（PersistentEmpireSpawnFrameBehavior）；否则按派系默认复活点 -->
+	<PersistDisconnectPosition>false</PersistDisconnectPosition>
+
+	<!-- ===== 战斗与物品 ===== -->
+	<!-- 战斗日志保留时长（秒，CombatlogBehavior） -->
+	<CombatlogDuration>60</CombatlogDuration>
+	<!-- 斩首概率 0～100（DecapitationBehavior）；0 = 永不斩首 -->
+	<DecapitationChance>20</DecapitationChance>
+	<!-- 场景互动物件（如可破坏）受击后多久内禁止修理（秒，SceneSync） -->
+	<RepairTimeoutAfterHit>60</RepairTimeoutAfterHit>
+	<!-- 死亡时装备销毁概率 0～100（PlayerInventoryComponent） -->
+	<ItemDestroyChanceOnDeath>5</ItemDestroyChanceOnDeath>
+	<!-- 神话·终裁（id99 子类 roll%9==8）：对当前生命比例低于阈值的玩家目标，按配置概率将本次伤害抬至致死；仅专服/主机执行随机，联机客户端跳过 -->
+	<MythicCoupDeGraceEnabled>true</MythicCoupDeGraceEnabled>
+	<!-- 可斩杀的最大当前生命比例，千分比（120=12%）；过小易滥杀，过大几乎不触发 -->
+	<MythicCoupDeGraceHpPermille>120</MythicCoupDeGraceHpPermille>
+	<!-- 触发概率：万分数 = (BaseBps + 神话 roll 合计 × PerRollBps) / 10000，再被引擎夹在约 0.06%～1.8% -->
+	<MythicCoupDeGraceChanceBaseBps>18</MythicCoupDeGraceChanceBaseBps>
+	<MythicCoupDeGraceChancePerRollBps>1</MythicCoupDeGraceChancePerRollBps>
+
+	<!-- ESC 菜单「自杀」是否可用 -->
+	<CanUseSuicide>true</CanUseSuicide>
+	<!-- 是否允许玩家改装备/旗帜配色类变更（与换装逻辑相关） -->
+	<CanUseChangeColor>true</CanUseChangeColor>
+
+	<!-- ===== 经济与仓库 ===== -->
+	<!-- 新玩家首次进入服务器给的随身第纳尔（PersistentEmpireBehavior 发钱） -->
+	<StartingGold>0</StartingGold>
+	<!-- 新玩家随身物品袋格子数（10～64；可被数据库 GameSettings 同名键覆盖）。Deserialize 时若存档格子少于该值会自动补齐空位。 -->
+	<DefaultPlayerInventorySlotCount>10</DefaultPlayerInventorySlotCount>
+	<!-- 仓库市场：从数据库 Deserialize 后仍为 0 的条目一次性补到此库存；0 = 关闭补足 -->
+	<StockpileDefaultStockWhenEmpty>20</StockpileDefaultStockWhenEmpty>
+	<!-- 马市：数据库无对应 MissionObjectHash 行或库存为 0 时，任务开始时写入的默认库存（1～999；持久化到 HorseMarkets 表） -->
+	<HorseMarketDefaultStock>20</HorseMarketDefaultStock>
+	<!-- 全局物价系数（百分数）：100 = 原价；150 = 买卖与进出口等公式整体 ×1.5（ConfigManager.ApplyEconomyPriceMultiplier） -->
+	<MarketGlobalPriceMultiplierPercent>150</MarketGlobalPriceMultiplierPercent>
+	<!-- 死亡掉落口袋现金百分比 0～100（MoneyPouchBehavior） -->
+	<DeathMoneyDropPercentage>3</DeathMoneyDropPercentage>
+	<!-- 偷窃成功率千分比等（PickpocketingBehavior，与 RequiredPickpocketing 技能门槛配合） -->
+	<PickpocketingPercentageThousands>0</PickpocketingPercentageThousands>
+	<RequiredPickpocketing>10</RequiredPickpocketing>
+
+	<!-- ===== 击杀战功（默认；GameSettings 可按击杀类型覆盖）===== -->
+	<KillRewardMilitaryMerit>8</KillRewardMilitaryMerit><!-- 军事战功 -->
+	<KillRewardNobleMerit>3</KillRewardNobleMerit><!-- 贵族战功 -->
+	
+		<!-- ===== 击杀播报（KillBroadcastBehavior，屏幕中央快速提示）===== -->
+	<KillBroadcastEnabled>true</KillBroadcastEnabled><!-- 总开关 -->
+	<KillBroadcastPlayerKills>true</KillBroadcastPlayerKills><!-- 玩家击杀玩家 -->
+	<KillBroadcastMountKills>true</KillBroadcastMountKills><!-- 玩家击杀坐骑（有骑手时显示骑手名） -->
+	<KillBroadcastSameFaction>false</KillBroadcastSameFaction><!-- true=同阵营击杀也播报 -->
+
+	<!-- ===== 连杀 KS（KillStreakBehavior / HUD / 管理 API）===== -->
+	<KillStreakEnabled>true</KillStreakEnabled><!-- 总开关 -->
+	<KillStreakBroadcastMinTier>3</KillStreakBroadcastMinTier><!-- 达到该段位及以上才全服广播 -->
+	<KillStreakKingMilestoneInterval>10</KillStreakKingMilestoneInterval><!-- 「里程碑」间隔（连杀段数） -->
+	<KillStreakKingMilestoneBonusDenars>1000</KillStreakKingMilestoneBonusDenars><!-- 里程碑奖励第纳尔 -->
+	<KillStreakHudVisible>true</KillStreakHudVisible><!-- 客户端连杀 HUD -->
+	<KillStreakMarkerLineVisible>true</KillStreakMarkerLineVisible><!-- 头顶标记中与连杀相关的行 -->
+	<KillStreakScoreboardColumnVisible>true</KillStreakScoreboardColumnVisible><!-- 记分板连杀列 -->
+	<KillStreakGmResetEnabled>true</KillStreakGmResetEnabled><!-- GM 面板是否显示重置连杀 -->
+	<KillStreakAdminApiEnabled>true</KillStreakAdminApiEnabled><!-- PE API 是否允许连杀相关管理接口 -->
+
+	<!-- ===== 荣誉雕像 / 全服排行榜（PE_LeaderboardStatue）===== -->
+	<LeaderboardEnabled>true</LeaderboardEnabled><!-- 总开关 -->
+	<LeaderboardTopCount>30</LeaderboardTopCount><!-- 每个榜单显示前 N 名 -->
+	<LeaderboardRequestCooldownSec>8</LeaderboardRequestCooldownSec><!-- 同一玩家切换榜单请求冷却（秒） -->
+	<!-- 允许面板/接口把 GameSettings 同步写回磁盘 GeneralConfig.xml；关则忽略 POST syncgeneralconfigfromdb -->
+	<SyncGeneralConfigFromGameSettingsApiEnabled>true</SyncGeneralConfigFromGameSettingsApiEnabled>
+
+	<!-- ===== 复活倒计时（秒）；客户端死亡 UI 读 RespawnPeriodSeconds，须与服一致 ===== -->
+	<RespawnPeriodSeconds>30</RespawnPeriodSeconds><!-- 正常复活等待 -->
+	<WoundedRespawnPeriodSeconds>1</WoundedRespawnPeriodSeconds><!-- 受伤状态复活等待 -->
+
+	<!-- ===== 自动存档（SaveSystemBehavior）===== -->
+	<AutosaveDuration>600</AutosaveDuration><!-- 周期（秒） -->
+	<AutosaveBatchSize>15</AutosaveBatchSize><!-- 每批写入玩家数量，减轻峰值 -->
+	<AutosaveIncludeDeadOrSpectating>true</AutosaveIncludeDeadOrSpectating><!-- 是否包含无操控角色的玩家 -->
+	<!-- 退出游戏：确认后倒计时（秒），再请求服务器保存，最后返回大厅；过短易与 Gauntlet 拆除冲突 -->
+	<QuitPreSaveCountdownSeconds>10</QuitPreSaveCountdownSeconds>
+
+	<!-- ===== 自动发工资（AutoPayBehavior）===== -->
+	<AutoPayEnabled>true</AutoPayEnabled>
+	<AutoPayTimeMinutes>20</AutoPayTimeMinutes><!-- 间隔（分钟） -->
+	<AutoPayGold>10</AutoPayGold><!-- 每次发放第纳尔 -->
+
+	<!-- ===== 改名（AdminServerBehavior / 花费与冷却）===== -->
+	<NameChangeGold>500000</NameChangeGold><!-- 0 = 免费改名 -->
+	<NameChangeCooldownInSeconds>1800</NameChangeCooldownInSeconds>
+
+	<!-- ===== 银行 ===== -->
+	<!-- BankAmountLimit：0 通常表示存款上限逻辑关闭或由代码默认；BankTaxRate 为存入手续费百分比（BankingComponent） -->
+	<BankAmountLimit>200000000</BankAmountLimit>
+	<BankTaxRate>1</BankTaxRate>
+	<!-- 管理员在游戏内输入以验证管理员身份的密码（与专服 AdminPassword 配合） -->
+	<AdminPassword>234568aa</AdminPassword>
+
+	<!-- 多服共用数据库时，admin_permissions 表按 server_id 区分；与本服配置一致 -->
+	<AdminPermissionsServerId>1</AdminPermissionsServerId>
+
+	<!-- ===== 派系领主投票（FactionPollComponent；LordPollEnabled 保留给面板/将来接入）===== -->
+	<LordPollEnabled>true</LordPollEnabled><!-- 是否允许发起领主竞选类投票流程 -->
+	<LordPollRequiredGold>5000</LordPollRequiredGold><!-- 发起投票消耗第纳尔 -->
+	<LordPollTimeOut>60</LordPollTimeOut><!-- 两次投票最小间隔（秒） -->
+
+	<!-- ===== 派系外交冷却（秒）===== -->
+	<WarDeclareTimeOut>30</WarDeclareTimeOut><!-- 宣战冷却 -->
+	<PeaceDeclareTimeOut>30</PeaceDeclareTimeOut><!-- 议和冷却 -->
+
+	<!-- ===== 锻造（CraftingComponent）：100 = 配方时间不变 ===== -->
+	<CraftingTimeMultiplierPercent>100</CraftingTimeMultiplierPercent>
+	<!-- 制作站 UI：进度条与「炉边锤砧」分段 HUD + 起止音效（关则仅保留进度条与完成文字） -->
+	<BlacksmithCraftFxEnabled>true</BlacksmithCraftFxEnabled>
+
+	<!-- ===== 医生包扎（DoctorBehavior）===== -->
+	<RequiredMedicineSkillForHealing>50</RequiredMedicineSkillForHealing><!-- 所需医术技能 -->
+	<MedicineHealingAmount>20</MedicineHealingAmount><!-- 每次治疗回复量 -->
+
+	<!-- ===== 受伤状态（WoundingBehavior）===== -->
+	<WoundingEnabled>true</WoundingEnabled>
+	<WoundingTimeMinutes>720</WoundingTimeMinutes><!-- 受伤持续（分钟） -->
+
+	<!-- ===== 重生欢迎播报（SpawnWelcome*）：高爵位+高军衔shortcut播报条件 ===== -->
+	<SpawnWelcomeHighNobleMin>5</SpawnWelcomeHighNobleMin>
+	<SpawnWelcomeSchoolMilitaryMin>10</SpawnWelcomeSchoolMilitaryMin>
+
+	<!-- ===== 饥饿（AgentHungerBehavior；间隔单位见代码 tick）===== -->
+	<HungerInterval>600</HungerInterval><!-- 饥饿递增间隔 -->
+	<HungerReduceAmount>1</HungerReduceAmount><!-- 每次扣除饥饿值 -->
+	<HungerRefillHealthLowerBoundary>0</HungerRefillHealthLowerBoundary><!-- 饥饿低于何值开始影响回血逻辑 -->
+	<HungerHealingAmount>1</HungerHealingAmount>
+	<HungerHealingReduceAmount>0</HungerHealingReduceAmount>
+	<HungerStartHealingUnderHealthPct>100</HungerStartHealingUnderHealthPct><!-- 血量低于生命百分比才开始饥饿回血分支 -->
+	<StarvingCheckIntervalSeconds>10</StarvingCheckIntervalSeconds><!-- 饥饿/挨饿判定周期（秒） -->
+
+	<!-- ===== 物品 ID（撬锁/偷窃/毒药/解毒等行为的默认道具）===== -->
+	<MedicineItemId>pe_doctorscalpel</MedicineItemId>
+	<LockpickItem>pe_lockpick</LockpickItem>
+	<PickpocketingItem>pe_stealing_dagger</PickpocketingItem>
+	<PoisonItemId>pe_poison_dagger</PoisonItemId>
+	<AntidoteItemId>pe_antidote</AntidoteItemId>
+
+	<!-- ===== 默认派系（平民/法外）文化与旗帜字符串（Bannerlord 编码）===== -->
+	<CommonerCulture>empire</CommonerCulture>
+	<OutlawCulture>empire</OutlawCulture>
+	<CommonerBanner>17.1.148.1836.1836.765.786.1.0.-30.100.0.143.-295.425.764.764.1.0.0</CommonerBanner>
+	<OutlawBanner>24.193.116.1536.1536.768.768.1.0.0</OutlawBanner>
+	<CommonerName>Commoners</CommonerName>
+	<OutlawName>Outlaws</OutlawName>
+	<!-- 是否启用派系外交 UI/逻辑（与宣战等挂钩） -->
+	<CanUseDiplomacy>true</CanUseDiplomacy>
+	<!-- 玩家自定义旗帜编码最大长度（FactionsBehavior 校验） -->
+	<MaxBannerLength>255</MaxBannerLength>
+
+	<!-- ===== 骑士团 ===== -->
+	<KnightOrderRequireSameFaction>true</KnightOrderRequireSameFaction><!-- true：创建/加入须同阵营 -->
+	<KnightOrderCreateCostDenars>10000000</KnightOrderCreateCostDenars><!-- 创建一次性扣费（1000万第纳尔）；0=免费 -->
+	<KnightOrderCreateCostStellar>800</KnightOrderCreateCostStellar><!-- 创建星辉币费用（800星辉币）；0=不用。与上项均&gt;0 且 KnightOrderCreateAllowStellar=true 时客户端可选星辉币或第纳尔 -->
+	<KnightOrderCreateAllowStellar>true</KnightOrderCreateAllowStellar><!-- 第纳尔与星辉币创建费均&gt;0 时是否允许玩家选择星辉币支付 -->
+	<KnightOrderJoinRequiresApproval>true</KnightOrderJoinRequiresApproval><!-- true=入团需团长审核；false=直接加入 -->
+	<KnightOrderMembersBase>10</KnightOrderMembersBase><!-- 1级成员上限基数 -->
+	<KnightOrderMembersPerLevel>3</KnightOrderMembersPerLevel><!-- 每升一级额外成员名额 -->
+	<KnightOrderWarehouseBaseSlots>15</KnightOrderWarehouseBaseSlots><!-- 1级团库行数基数 -->
+	<KnightOrderWarehouseSlotsPerLevel>2</KnightOrderWarehouseSlotsPerLevel><!-- 每升一级额外团库行数 -->
+	<KnightOrderXpPerLevel>5000</KnightOrderXpPerLevel><!-- 升级所需经验系数 -->
+	<KnightOrderDirectoryListSize>40</KnightOrderDirectoryListSize><!-- 无团玩家大厅列表条数 -->
+	<TeleportDoorAllowMounted>true</TeleportDoorAllowMounted><!-- true=骑马可按 F 传送；false=必须下马 -->
+	<TeleportDoorRequireOnLand>false</TeleportDoorRequireOnLand><!-- true=步行时必须 IsOnLand()；骑马时仍受 AllowMounted 控制。可在 GameSettings 表实时改 -->
+	<RankPromoDenarCostPercent>120</RankPromoDenarCostPercent><!-- 军衔/爵位晋升第纳尔表系数；100=默认 -->
+	<RankPromoStellarCostPercent>150</RankPromoStellarCostPercent><!-- 爵位晋升星辉币表系数 -->
+	<NoblePromoMinMilitaryRankDelta>5</NoblePromoMinMilitaryRankDelta><!-- 晋升爵位要求：军衔 &gt;= 当前爵位 + 该值 -->
+	<KnightOrderKickEnabled>true</KnightOrderKickEnabled><!-- 团长踢人 -->
+	<KnightOrderTreasuryEnabled>true</KnightOrderTreasuryEnabled><!-- 金库存取 -->
+	<KnightOrderSalaryEnabled>true</KnightOrderSalaryEnabled><!-- 团员工资（KO-5） -->
+	<KnightOrderSalaryCooldownHours>24</KnightOrderSalaryCooldownHours><!-- 领工资冷却（小时）；0=无冷却 -->
+	<KnightOrderWarehouseEnabled>true</KnightOrderWarehouseEnabled><!-- 团库物品（KO-6） -->
+	<KnightOrderWarehouseMaxRows>120</KnightOrderWarehouseMaxRows><!-- 团库列表最大行数 -->
+	<KnightOrderWarehouseBaseSlots>20</KnightOrderWarehouseBaseSlots><!-- 新骑士团默认团库行数上限（DB WarehouseSlotCapacity） -->
+	<KnightOrderWarehouseExpandEnabled>true</KnightOrderWarehouseExpandEnabled><!-- 团长星辉币扩容团库行数 -->
+	<KnightOrderWarehouseSlotExpandStellarPerSlot>100</KnightOrderWarehouseSlotExpandStellarPerSlot><!-- 每增加 1 行库存上限消耗的星辉币；0=免费扩容 -->
+	<KnightOrderWarehouseMaxSlotCapacity>200</KnightOrderWarehouseMaxSlotCapacity><!-- 单骑士团 WarehouseSlotCapacity 上限（仍受 KnightOrderWarehouseMaxRows 限制） -->
+	<KnightOrderWarehouseDragStripEnabled>true</KnightOrderWarehouseDragStripEnabled><!-- 团长面板内显示背包条与拖入团库 -->
+	<KnightOrderWarehouseLogAdminApiEnabled>true</KnightOrderWarehouseLogAdminApiEnabled><!-- GET 团库审计 API -->
+	<KnightOrderMarkerLineVisible>true</KnightOrderMarkerLineVisible><!-- 头顶第二行骑士团职务标签 -->
+	
+
+	<!-- ===== RP 近距离互动（RpEmoteNotifyRadius：服端限制约 5～80 米）===== -->
+	<RpEmoteNotifyRadiusMeters>80</RpEmoteNotifyRadiusMeters>
+	<RpEmoteButtonCooldownMs>2000</RpEmoteButtonCooldownMs><!-- Q 面板 RP 按钮冷却（毫秒） -->
+
+	<!-- ===== 复活币（PersistentEmpireClientBehavior / 服务器校验）===== -->
+	<ReviveCoinEnabled>true</ReviveCoinEnabled>
+	<!-- 复活币满状态复活后的无敌时间（秒）；0 关闭。受击后服端回血抵消伤害（含坐骑）。 -->
+	<InstantReviveInvulnerabilitySeconds>10</InstantReviveInvulnerabilitySeconds>
+	<InstantReviveMinRemainingCooldownSeconds>3</InstantReviveMinRemainingCooldownSeconds><!-- 使用复活币后额外最短等待 -->
+	<ReviveCoinDailyUseLimit>0</ReviveCoinDailyUseLimit><!-- 每日上限；0 表示不按日限制（以实际实现为准） -->
+
+	<!-- ===== V3 装备 / 词条 → 生命与护甲上限（PlayerVitalityBonusHelper / PEAgentStatCalculateModel）===== -->
+	<!-- 角色最终生命上限 = 职业基础 + 首饰固定值 + 词条(3/32/42/99) + 同阶五件套加成，且不超过 PlayerMaxHealthTotalCap；入库读档亦钳制。 -->
+	<PlayerMaxHealthTotalCap>1000000</PlayerMaxHealthTotalCap>
+	<JewelryFlatHealthBonusPerTrinket>8</JewelryFlatHealthBonusPerTrinket><!-- 每件首饰基础再加 Tier*2 -->
+	<EquipmentAffixBonusHealthSoftCap>0</EquipmentAffixBonusHealthSoftCap><!-- 词条合计额外生命软上限（绝对值）；0 表示不限制 -->
+	<EquipmentAffixArmorBonusCapPermille>350</EquipmentAffixArmorBonusCapPermille><!-- 词条护甲乘区额外上限，千分比（350=+35%） -->
+	<MythicPreloadChancePermille>150</MythicPreloadChancePermille><!-- 神域·圣（显示品质 63）额外 15% 概率预埋神话词条槽；64+ 必出神话 -->
+	<!-- 地面掉落光柱粒子（九阶 Band0–8；留空则用 ItemQualityHelper 默认：sparkle_a/b、blacksmith_flame、missile_flame、campfire） -->
+	<LootBeamParticleBand0>psys_game_sparkle_a</LootBeamParticleBand0>
+	<LootBeamParticleBand1>psys_game_sparkle_a</LootBeamParticleBand1>
+	<LootBeamParticleBand2>psys_game_sparkle_a</LootBeamParticleBand2>
+	<LootBeamParticleBand3>psys_game_sparkle_b</LootBeamParticleBand3>
+	<LootBeamParticleBand4>psys_game_sparkle_b</LootBeamParticleBand4>
+	<LootBeamParticleBand5>psys_game_blacksmith_flame</LootBeamParticleBand5>
+	<LootBeamParticleBand6>psys_game_missile_flame</LootBeamParticleBand6>
+	<LootBeamParticleBand7>psys_game_sparkle_b</LootBeamParticleBand7>
+	<LootBeamParticleBand8>psys_game_campfire</LootBeamParticleBand8>
+	<EquipmentSetBonusEnabled>true</EquipmentSetBonusEnabled><!-- 五件护甲同七阶带：翡翠生命+5%、苍蓝护甲+10%、紫晶挥砍/装填+15%、琥珀武器伤害+8%、赤血+5%、神域神话生命+10%与伤害+10%、太初五件 Lv35 生命+15%与伤害+15%（PlayerVitalityBonusHelper + PEAgentStatCalculateModel） -->
+	<!-- 额外负重惩罚：有效护甲负重超过阈值时再乘移速（0=关闭；与原版耐力/重量公式叠加） -->
+	<EquipmentEncumbranceExtraPenaltyEncumbranceThreshold>0</EquipmentEncumbranceExtraPenaltyEncumbranceThreshold>
+	<EquipmentEncumbranceExtraPenaltySpeedPermillePerKOverThreshold>8</EquipmentEncumbranceExtraPenaltySpeedPermillePerKOverThreshold>
+
+	<!-- ===== 仓库 / 交易行价位（StockpileMarket.MarketItem；0=关闭对应加成）===== -->
+	<!-- 按 Markets XML 分区 Tier1..Tier4：每高一级额外千分比加价（150=每级+15% 买入/卖出基准） -->
+	<StockpileMarketListTierPriceBonusPermille>120</StockpileMarketListTierPriceBonusPermille>
+	<!-- 物品提示里对「买入/卖出」数字的展示加权：每高 1 个原生物品 Tier 增加千分比（90=每阶+9%，含装备额外加成） -->
+	<ItemTooltipPriceDisplayTierBonusPermille>90</ItemTooltipPriceDisplayTierBonusPermille>
+	<!-- 展示价千分比上限（2300=最高 2.3×） -->
+	<ItemTooltipPriceDisplayPermilleCap>2300</ItemTooltipPriceDisplayPermilleCap>
+
+	<!-- ===== 新手首次加入礼包（StarterPackGranted 防重复）===== -->
+	<NewbieStarterPackEnabled>true</NewbieStarterPackEnabled>
+	<NewbieStarterPackGold>5000</NewbieStarterPackGold>
+	<!-- 格式 itemId:数量; 多条分号分隔 -->
+	<NewbieStarterPackItems>PE_peasant_hatchet_1_t1:1;mp_tunic_with_shoulder_pads:1;mp_empire_horseman_boots:1;pe_kitchen_food_bread_a:5;pe_bandage:3;pe_book:1;pe_linen:20;pe_crude_iron:20;pe_wooden_plank:20</NewbieStarterPackItems>
+
+	<!-- ===== 结构化聊天频道（LocalChatComponent / ConfigManager 冷却下限 500ms）===== -->
+	<FactionChatEnabled>true</FactionChatEnabled>
+	<KnightOrderChatEnabled>true</KnightOrderChatEnabled>
+	<FamilyChatEnabled>true</FamilyChatEnabled>
+	<ChatCooldownGlobalMs>3000</ChatCooldownGlobalMs>
+	<ChatCooldownFactionMs>5000</ChatCooldownFactionMs>
+	<ChatCooldownKnightOrderMs>10000</ChatCooldownKnightOrderMs>
+	<ChatCooldownFamilyMs>8000</ChatCooldownFamilyMs>
+	<ChatCooldownWhisperMs>2000</ChatCooldownWhisperMs>
+
+	<!--
+	  ===== 聊天命令前缀与颜色（ChatCommands）=====
+	  MessagePrefix：命令前缀字符（如 /say）。
+	  *Enabled：是否注册该命令；*Color：聊天中提示颜色（ARGB #AARRGGBB）。
+	  Dice/Do/Me/Roll/Wounds：Distance = 附近可见距离（米）；Bubble = 是否在头顶气泡显示。
+	  TeleportToPosition：管理员 !tp 类传送坐标命令。
+	-->
+	<MessagePrefix>/</MessagePrefix>
+	<DefaultMessageColor>#FFFDFDFD</DefaultMessageColor>
+	<AnnounceEnabled>true</AnnounceEnabled>
+	<AnnounceColor>#FF0800FF</AnnounceColor>
+	<CommandsEnabled>true</CommandsEnabled>
+	<CommandsColor>#FFFDFDFD</CommandsColor>
+	<DiceEnabled>true</DiceEnabled>
+	<DiceColor>#FFFF6666</DiceColor>
+	<DisableEnabled>true</DisableEnabled>
+	<DisableColor>#FFFF6666</DisableColor>
+	<DiceDistance>30</DiceDistance>
+	<DiceBubble>true</DiceBubble>
+	<DoEnabled>true</DoEnabled>
+	<DoColor>#FFFF6666</DoColor>
+	<DoDistance>30</DoDistance>
+	<DoBubble>true</DoBubble>
+	<HelpEnabled>true</HelpEnabled>
+	<HelpColor>#FFFF6666</HelpColor>
+	<MeEnabled>true</MeEnabled>
+	<MeColor>#FFFF6666</MeColor>
+	<MeDistance>30</MeDistance>
+	<MeBubble>true</MeBubble>
+	<MuteEnabled>true</MuteEnabled>
+	<MuteColor>#FFFF6666</MuteColor>
+	<NameEnabled>true</NameEnabled>
+	<NameColor>#FFFF6666</NameColor>
+	<RollEnabled>true</RollEnabled>
+	<RollColor>#FFFF6666</RollColor>
+	<RollDistance>30</RollDistance>
+	<RollBubble>true</RollBubble>
+	<VMuteEnabled>true</VMuteEnabled>
+	<VmuteColor>#FFFF6666</VmuteColor>
+	<WoundsEnabled>true</WoundsEnabled>
+	<WoundsColor>#FFFF6666</WoundsColor>
+	<WoundsDistance>0</WoundsDistance>
+	<WoundsBubble>false</WoundsBubble>
+	<TeleportToPositionColor>#FFFF6666</TeleportToPositionColor>
+	<TeleportToPositionEnabled>true</TeleportToPositionEnabled>
+
+	<!--
+	  ===== ECO：星辉币兑换 / 在线点（节点名须与 ConfigManager 一致）=====
+	  热更：① GameSettings 表 SettingKey=节点名；② 改 GeneralConfig.xml 后管理员 !reloadgeneralconfig。
+	  汇率与手续费在客户端银行界面与 DBEcoCurrencyRepository 兑换逻辑中使用。
+	  OnlinePoints*：在线点发放节奏（若服端行为已接 PersistEmpiresSave）；否则留作面板/后续版本。
+	-->
+	<CurrencyExchangeEnabled>true</CurrencyExchangeEnabled><!-- 是否允许在银行把星辉币换成口袋第纳尔 -->
+	<CurrencyExchangeStellarToDenarRate>10000</CurrencyExchangeStellarToDenarRate><!-- 每单位星辉币对应基准第纳尔（扣费前） -->
+	<CurrencyExchangeFeePercent>5</CurrencyExchangeFeePercent><!-- 手续费百分比 -->
+	<CurrencyExchangeMinStellar>1</CurrencyExchangeMinStellar><!-- 单笔最少星辉币 -->
+	<OnlinePointsGrantIntervalMinutes>60</OnlinePointsGrantIntervalMinutes>
+	<OnlinePointsGrantPerTick>1</OnlinePointsGrantPerTick>
+	<OnlinePointsDailyCap>240</OnlinePointsDailyCap>
+
+	<!-- ===== Discord Webhook（DiscordBehavior）：默认关闭；填 Url 并 Enabled=true 生效 ===== -->
+	<DiscordAdminMessageEnabled>false</DiscordAdminMessageEnabled><!-- 管理员相关通知 -->
+	<DiscordAdminMessageUrl></DiscordAdminMessageUrl>
+	<DiscordAnnounceEnabled>false</DiscordAnnounceEnabled><!-- 全服公告类 -->
+	<DiscordAnnounceUrl></DiscordAnnounceUrl>
+	<DiscordServeStatusEnabled>false</DiscordServeStatusEnabled><!-- 服务器状态心跳 -->
+	<DiscordServeStatusUrl></DiscordServeStatusUrl>
+	<DiscordExceptionEnabled>false</DiscordExceptionEnabled><!-- 未捕获异常告警 -->
+	<DiscordExceptionUrl></DiscordExceptionUrl>
+	<DiscordLogEnabled>false</DiscordLogEnabled><!-- 通用日志流水 -->
+	<DiscordLogUrl></DiscordLogUrl>
+
+	<!-- EquipmentAffixCombatBuffBehavior：词条链闪/灼烧DoT/定身与套装被动 Buff 标记（独立 BuffId，见 PeCombatBuffIds） -->
+	<EquipmentAffixProcBuffsEnabled>true</EquipmentAffixProcBuffsEnabled>
+	<EquipmentSetBonusBuffMarkersEnabled>true</EquipmentSetBonusBuffMarkersEnabled>
+	<!-- 多人：专服广播 Buff 列表，客户端镜像供移速/承伤乘子与 UI（通用行：BuffId + Remaining + Power）；关闭则仅专服权威、客户端不同步 -->
+	<EquipmentCombatBuffsNetworkSyncEnabled>true</EquipmentCombatBuffsNetworkSyncEnabled>
+	<!-- 多人客户端：在两次同步之间本地递减 Remaining，供 HUD 倒计时平滑（权威仍以专服包为准）；关闭则仅在收到包时跳变 -->
+	<EquipmentCombatBuffsClientHudRemainingSmooth>true</EquipmentCombatBuffsClientHudRemainingSmooth>
+
+	<!-- Band≥6 穿戴角色光晕 / 高品武器拖尾（客户端 PEEquipmentQualityVisualMissionView） -->
+	<EquipmentAuraMinBand>6</EquipmentAuraMinBand>
+	<EquipmentWeaponTrailMinQuality>55</EquipmentWeaponTrailMinQuality>
+	<EquipmentAuraParticleBand6>psys_game_missile_flame</EquipmentAuraParticleBand6>
+	<EquipmentAuraParticleBand7>psys_game_sparkle_b</EquipmentAuraParticleBand7>
+	<EquipmentAuraParticleBand7Peak>psys_game_sparkle_b</EquipmentAuraParticleBand7Peak>
+	<EquipmentAuraParticleBand8>psys_game_campfire</EquipmentAuraParticleBand8>
+	<EquipmentWeaponTrailParticle>psys_game_holy_light</EquipmentWeaponTrailParticle>
+
+	<!-- 个人装备耐久（0–1000 permille；归零后属性大幅衰减） -->
+	<EquipmentDurabilityLossOnHitPermille>2</EquipmentDurabilityLossOnHitPermille>
+	<EquipmentDurabilityLossOnDeathPermille>80</EquipmentDurabilityLossOnDeathPermille>
+	<EquipmentBrokenThresholdPermille>50</EquipmentBrokenThresholdPermille>
+	<EquipmentRepairCostPerMissingPermille>1</EquipmentRepairCostPerMissingPermille>
+	<EquipmentRepairAtAllCraftingStations>true</EquipmentRepairAtAllCraftingStations>
+</GeneralConfig>
