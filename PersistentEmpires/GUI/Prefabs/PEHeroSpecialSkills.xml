@@ -1,0 +1,130 @@
+<Prefab>
+  <Window>
+    <Widget HorizontalAlignment="Center" VerticalAlignment="Center" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="760" SuggestedHeight="820" MarginBottom="40">
+      <Children>
+        <Standard.Window Parameter.Title="@WindowTitle">
+          <Children>
+            <ListPanel MarginTop="52" MarginLeft="18" MarginRight="18" MarginBottom="18" StackLayout.LayoutMethod="VerticalTopToBottom" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+              <Children>
+                <ListPanel StackLayout.LayoutMethod="HorizontalLeftToRight" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="44" MarginBottom="10">
+                  <Children>
+                    <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginRight="8" Brush="WideButton.Flat" Command.Click="ExecuteSelectCombatTab" Text="@CombatTabLabel" />
+                    <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="WideButton.Flat" Command.Click="ExecuteSelectLifeTab" Text="@LifeTabLabel" />
+                  </Children>
+                </ListPanel>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" Sprite="GradientDivider_9" Color="#A18661FF" MarginBottom="8" />
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" SuggestedHeight="560" IsVisible="@CombatTabSelected">
+                  <Children>
+                    <ListPanel StackLayout.LayoutMethod="VerticalTopToBottom" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="18" Brush="Kingdom.SortButtons.Text" Text="@ActiveHeader" MarginBottom="6" />
+                        <ListPanel DataSource="{ActiveSlots}" StackLayout.LayoutMethod="HorizontalLeftToRight" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="72" MarginBottom="12">
+                          <ItemTemplate>
+                            <ListPanel WidthSizePolicy="Fixed" SuggestedWidth="84" HeightSizePolicy="StretchToParent" MarginRight="4" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="14" Brush.FontColor="#E8DCC8FF" Text="@Hotkey" HorizontalAlignment="Center" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" Sprite="BlankWhiteSquare_9" Color="#5a4033FF" AlphaFactor="0.35" MarginTop="2" MarginBottom="2" IsVisible="@IsBindingTarget" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="12" Text="@SkillName" MaxHeight="48" />
+                              </Children>
+                            </ListPanel>
+                          </ItemTemplate>
+                        </ListPanel>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="18" Brush="Kingdom.SortButtons.Text" Text="@PassiveHeader" MarginBottom="6" />
+                        <ListPanel StackLayout.LayoutMethod="HorizontalLeftToRight" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="420">
+                          <Children>
+                            <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="false" ClipRect="ClipRectCombat" InnerPanel="ClipRectCombat\CombatPassiveList" VerticalScrollbar="..\VertCombat">
+                              <Children>
+                                <Widget Id="ClipRectCombat" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                                  <Children>
+                                    <ListPanel Id="CombatPassiveList" DataSource="{CombatPassiveRows}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" VerticalAlignment="Top">
+                                      <ItemTemplate>
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="6" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                          <Children>
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="17" Text="@SkillName" />
+                                            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="72" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush.FontSize="17" Text="@SkillValue" />
+                                          </Children>
+                                        </ListPanel>
+                                      </ItemTemplate>
+                                    </ListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </ScrollablePanel>
+                            <ScrollbarWidget Id="VertCombat" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="8" HorizontalAlignment="Right" VerticalAlignment="Top" MarginLeft="6" AlignmentAxis="Vertical" Handle="VertCombatHandle" MaxValue="100" MinValue="0">
+                              <Children>
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#5a4033FF" AlphaFactor="0.2" />
+                                <ImageWidget Id="VertCombatHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="10" SuggestedWidth="8" HorizontalAlignment="Center" Brush="FaceGen.Scrollbar.Handle" />
+                              </Children>
+                            </ScrollbarWidget>
+                          </Children>
+                        </ListPanel>
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" SuggestedHeight="560" IsVisible="@LifeTabSelected">
+                  <Children>
+                    <ListPanel StackLayout.LayoutMethod="VerticalTopToBottom" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="18" Brush="Kingdom.SortButtons.Text" Text="@EcoBlacksmithHeader" MarginBottom="4" />
+                        <ListPanel StackLayout.LayoutMethod="HorizontalLeftToRight" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="14" Brush.FontColor="#C4B8A4FF" Text="@EcoColumnStat" />
+                            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="88" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush.FontSize="14" Brush.FontColor="#C4B8A4FF" Text="@EcoColumnXp" />
+                            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="200" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush.FontSize="14" Brush.FontColor="#C4B8A4FF" Text="@EcoColumnEff" />
+                          </Children>
+                        </ListPanel>
+                        <ListPanel DataSource="{EcoBlacksmithRows}" StackLayout.LayoutMethod="VerticalTopToBottom" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="10">
+                          <ItemTemplate>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="16" Text="@StatLabel" />
+                                <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="88" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush.FontSize="16" Text="@XpValue" />
+                                <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="200" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush.FontSize="15" Text="@EffValue" />
+                              </Children>
+                            </ListPanel>
+                          </ItemTemplate>
+                        </ListPanel>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" Sprite="GradientDivider_9" Color="#6a5040FF" MarginBottom="8" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="18" Brush="Kingdom.SortButtons.Text" Text="@LifeHeader" MarginBottom="6" />
+                        <ListPanel StackLayout.LayoutMethod="HorizontalLeftToRight" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="360">
+                          <Children>
+                            <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="false" ClipRect="ClipRectLife" InnerPanel="ClipRectLife\LifeSkillList" VerticalScrollbar="..\VertLife">
+                              <Children>
+                                <Widget Id="ClipRectLife" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                                  <Children>
+                                    <ListPanel Id="LifeSkillList" DataSource="{LifeSkillRows}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" VerticalAlignment="Top">
+                                      <ItemTemplate>
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="6" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                          <Children>
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="17" Text="@SkillName" />
+                                            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="72" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush.FontSize="17" Text="@SkillValue" />
+                                          </Children>
+                                        </ListPanel>
+                                      </ItemTemplate>
+                                    </ListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </ScrollablePanel>
+                            <ScrollbarWidget Id="VertLife" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="8" HorizontalAlignment="Right" VerticalAlignment="Top" MarginLeft="6" AlignmentAxis="Vertical" Handle="VertLifeHandle" MaxValue="100" MinValue="0">
+                              <Children>
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#5a4033FF" AlphaFactor="0.2" />
+                                <ImageWidget Id="VertLifeHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="10" SuggestedWidth="8" HorizontalAlignment="Center" Brush="FaceGen.Scrollbar.Handle" />
+                              </Children>
+                            </ScrollbarWidget>
+                          </Children>
+                        </ListPanel>
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="14" Brush.FontColor="#B8A88CFF" Text="@HintText" MarginTop="10" HorizontalAlignment="Center" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </Standard.Window>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>
