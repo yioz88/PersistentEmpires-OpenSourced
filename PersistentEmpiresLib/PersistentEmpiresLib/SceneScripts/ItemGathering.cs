@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Data;
+using PersistentEmpiresLib.Data;
 using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.NetworkMessages.Server;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
@@ -37,14 +37,14 @@ namespace PersistentEmpiresLib.SceneScripts
         private int CurrentCount = 0;
         private ItemObject DropsItemObject;
 
-        protected override bool LockUserFrames
+        public override bool LockUserFrames
         {
             get
             {
                 return false;
             }
         }
-        protected override bool LockUserPositions
+        public override bool LockUserPositions
         {
             get
             {
@@ -162,7 +162,7 @@ namespace PersistentEmpiresLib.SceneScripts
             userAgent.ClearTargetFrame();
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             if (GameNetwork.IsServer)
             {
@@ -248,9 +248,9 @@ namespace PersistentEmpiresLib.SceneScripts
             }
             base.OnUse(userAgent);
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Item Gathering";
+            return new TextObject("Item Gathering");
         }
 
     }

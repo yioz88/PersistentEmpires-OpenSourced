@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
+using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using PersistentEmpiresLib.SceneScripts.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -94,14 +94,14 @@ namespace PersistentEmpiresLib.SceneScripts
         public static int MAX_STOCK_COUNT = 1000;
         public string XmlFile = "examplemarket"; // itemId*minimum*maximum,itemId*minimum*maximum
         public string ModuleFolder = "PersistentEmpires";
-        protected override bool LockUserFrames
+        public override bool LockUserFrames
         {
             get
             {
                 return false;
             }
         }
-        protected override bool LockUserPositions
+        public override bool LockUserPositions
         {
             get
             {
@@ -115,34 +115,75 @@ namespace PersistentEmpiresLib.SceneScripts
         protected void LoadMarketItems(string innerText, int tier)
         {
 
-            if (innerText == "") return;
+            if (string.IsNullOrEmpty(innerText)) return;
+            this.MarketItems = this.MarketItems ?? new List<MarketItem>();
+            
             foreach (string marketItemStr in innerText.Trim().Split('|'))
             {
+                if (string.IsNullOrWhiteSpace(marketItemStr)) continue;
+                
                 string[] values = marketItemStr.Split('*');
-                string itemId = values[0];
-                int minPrice = int.Parse(values[1]);
-                int maxPrice = int.Parse(values[2]);
-                int stability = values.Length > 4 ? int.Parse(values[3]) : 10;
+                if (values.Length < 3)
+                {
+                    Debug.Print("[PE_StockpileMarket] Invalid market item format: " + marketItemStr, 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                string itemId = values[0].Trim();
+                int minPrice;
+                int maxPrice;
+                int stability = 10;
+                
+                if (!int.TryParse(values[1], out minPrice) || !int.TryParse(values[2], out maxPrice))
+                {
+                    Debug.Print("[PE_StockpileMarket] Invalid price values for item: " + itemId, 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                if (values.Length > 4 && !int.TryParse(values[3], out stability))
+                {
+                    stability = 10;
+                }
 
                 ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
                 if (item == null)
                 {
                     Debug.Print(" ERROR IN MARKET SERIALIZATION " + this.XmlFile + " ITEM ID " + itemId + " NOT FOUND !!! ", 0, Debug.DebugColor.Red);
                 }
-                this.MarketItems.Add(new MarketItem(itemId, maxPrice, minPrice, stability, tier));
+                else
+                {
+                    this.MarketItems.Add(new MarketItem(itemId, maxPrice, minPrice, stability, tier));
+                }
             }
         }
         protected void LoadCraftingBoxes(string innerText)
         {
             this.CraftingBoxes = new List<CraftingBox>();
-            if (innerText == "") return;
+            if (string.IsNullOrEmpty(innerText)) return;
+            
             foreach (string craftingBoxStr in innerText.Trim().Split('|'))
             {
+                if (string.IsNullOrWhiteSpace(craftingBoxStr)) continue;
+                
                 string[] values = craftingBoxStr.Split('*');
-                string itemId = values[0];
-                string minTierLevel = values[1];
-                string maxTierLevel = values[2];
-                this.CraftingBoxes.Add(new CraftingBox(itemId, minTierLevel, maxTierLevel));
+                if (values.Length < 3)
+                {
+                    Debug.Print("[PE_StockpileMarket] Invalid crafting box format: " + craftingBoxStr, 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                string itemId = values[0].Trim();
+                string minTierLevel = values[1].Trim();
+                string maxTierLevel = values[2].Trim();
+                
+                try
+                {
+                    this.CraftingBoxes.Add(new CraftingBox(itemId, minTierLevel, maxTierLevel));
+                }
+                catch (Exception e)
+                {
+                    Debug.Print("[PE_StockpileMarket] Error creating crafting box: " + e.Message, 0, Debug.DebugColor.Red);
+                }
             }
         }
 
@@ -154,31 +195,47 @@ namespace PersistentEmpiresLib.SceneScripts
             TextObject descriptionMessage = new TextObject("Press {KEY} To Browse");
             descriptionMessage.SetTextVariable("KEY", HyperlinkTexts.GetKeyHyperlinkText(HotKeyManager.GetHotKeyId("CombatHotKeyCategory", 13)));
             base.DescriptionMessage = descriptionMessage;
-            this.stockpileMarketComponent = Mission.Current.GetMissionBehavior<StockpileMarketComponent>();
+            
+            this.stockpileMarketComponent = Mission.Current?.GetMissionBehavior<StockpileMarketComponent>();
             Debug.Print("Initiating Stockpile Market With " + this.ModuleFolder + " Module");
-            string xmlPath = ModuleHelper.GetXmlPath(this.ModuleFolder, "Markets/" + this.XmlFile);
-            XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.Load(xmlPath);
-            this.MarketItems = new List<MarketItem>();
-            this.LoadMarketItems(xmlDocument.SelectSingleNode("/Market/Tier1Items").InnerText, 1);
-            this.LoadMarketItems(xmlDocument.SelectSingleNode("/Market/Tier2Items").InnerText, 2);
-            this.LoadMarketItems(xmlDocument.SelectSingleNode("/Market/Tier3Items").InnerText, 3);
-            this.LoadMarketItems(xmlDocument.SelectSingleNode("/Market/Tier4Items").InnerText, 4);
-            this.LoadCraftingBoxes(xmlDocument.SelectSingleNode("/Market/CraftingBoxes").InnerText);
+            
+            try
+            {
+                string xmlPath = ModuleHelper.GetXmlPath(this.ModuleFolder, "Markets/" + this.XmlFile);
+                if (string.IsNullOrEmpty(xmlPath))
+                {
+                    Debug.Print("[PE_StockpileMarket] XML path is null or empty!", 0, Debug.DebugColor.Red);
+                    return;
+                }
+                
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(xmlPath);
+                this.MarketItems = new List<MarketItem>();
+                
+                this.LoadMarketItems(xmlDocument.SelectSingleNode("/Market/Tier1Items")?.InnerText ?? "", 1);
+                this.LoadMarketItems(xmlDocument.SelectSingleNode("/Market/Tier2Items")?.InnerText ?? "", 2);
+                this.LoadMarketItems(xmlDocument.SelectSingleNode("/Market/Tier3Items")?.InnerText ?? "", 3);
+                this.LoadMarketItems(xmlDocument.SelectSingleNode("/Market/Tier4Items")?.InnerText ?? "", 4);
+                this.LoadCraftingBoxes(xmlDocument.SelectSingleNode("/Market/CraftingBoxes")?.InnerText ?? "");
+            }
+            catch (Exception e)
+            {
+                Debug.Print("[PE_StockpileMarket] Error loading market XML: " + e.Message, 0, Debug.DebugColor.Red);
+            }
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Stockpile Market";
+            return new TextObject("Stockpile Market");
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             if (!base.IsUsable(userAgent))
             {
                 userAgent.StopUsingGameObjectMT(false);
                 return;
             }
-            base.OnUse(userAgent);
+            base.OnUse(userAgent, preferenceIndex);
             Debug.Print("[USING LOG] AGENT USE " + this.GetType().Name);
 
             if (GameNetwork.IsServer)
@@ -189,16 +246,43 @@ namespace PersistentEmpiresLib.SceneScripts
         }
         public void DeserializeStocks(string serialized)
         {
+            if (string.IsNullOrEmpty(serialized))
+            {
+                return;
+            }
+            
             string[] elements = serialized.Split('|');
             foreach (string s in elements)
             {
-                ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(s.Split('*')[0]);
+                if (string.IsNullOrWhiteSpace(s)) continue;
+                
+                string[] parts = s.Split('*');
+                if (parts.Length < 2)
+                {
+                    Debug.Print("[PE_StockpileMarket] Invalid serialized stock format: " + s, 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                string itemId = parts[0].Trim();
+                ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
                 if (item == null)
                 {
-                    Debug.Print(" ERROR IN MARKET SERIALIZATION " + this.XmlFile + " ITEM ID " + s.Split('*')[0] + " NOT FOUND !!! ", 0, Debug.DebugColor.Red);
+                    Debug.Print(" ERROR IN MARKET SERIALIZATION " + this.XmlFile + " ITEM ID " + itemId + " NOT FOUND !!! ", 0, Debug.DebugColor.Red);
+                    continue;
                 }
-                int stock = int.Parse(s.Split('*')[1]);
-                MarketItems.Find(m => m.Item.StringId == item.StringId).UpdateReserve(stock);
+                
+                int stock;
+                if (!int.TryParse(parts[1], out stock))
+                {
+                    Debug.Print("[PE_StockpileMarket] Invalid stock value for item: " + itemId, 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                MarketItem marketItem = this.MarketItems?.Find(m => m.Item?.StringId == item.StringId);
+                if (marketItem != null)
+                {
+                    marketItem.UpdateReserve(stock);
+                }
             }
         }
         public string SerializeStocks()
@@ -211,7 +295,7 @@ namespace PersistentEmpiresLib.SceneScripts
             return this;
         }
 
-        protected override bool OnHit(Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
+        protected bool OnHit(Agent victimAgent, Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
         {
             reportDamage = false;
             if (attackerAgent == null) return false;

@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.SceneScripts.Extensions;
+using PersistentEmpiresLib.SceneScripts.Extensions;
 using PersistentEmpiresLib.SceneScripts.Interfaces;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -118,7 +118,7 @@ namespace PersistentEmpiresLib.SceneScripts
         }
 
         abstract public void SetHitPoint(float hitPoint, Vec3 impactDirection);
-        abstract protected override bool OnHit(Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage);
+        abstract protected bool OnHit(Agent victimAgent, Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage);
         abstract public bool IsStray();
 
         abstract public void ResetStrayDuration();

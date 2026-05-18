@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.SceneScripts.Extensions;
 using PersistentEmpiresLib.SceneScripts.Interfaces;
 using System.Collections.Generic;
@@ -688,13 +688,13 @@ namespace PersistentEmpiresLib.SceneScripts
         }
 
         // Token: 0x06002CD4 RID: 11476 RVA: 0x000B0DEA File Offset: 0x000AEFEA
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            if (!gameEntity.HasTag(this.AmmoPickUpTag))
+            if (gameEntity != null && !gameEntity.HasTag(this.AmmoPickUpTag))
             {
-                return new TextObject("{=NbpcDXtJ}Mangonel", null).ToString();
+                return new TextObject("{=NbpcDXtJ}Mangonel", null);
             }
-            return new TextObject("{=pzfbPbWW}Boulder", null).ToString();
+            return new TextObject("{=pzfbPbWW}Boulder", null);
         }
 
         // Token: 0x06002CD5 RID: 11477 RVA: 0x000B0E1C File Offset: 0x000AF01C
@@ -878,7 +878,7 @@ namespace PersistentEmpiresLib.SceneScripts
         }
 
 
-        protected override bool OnHit(Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
+        protected bool OnHit(Agent victimAgent, Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
         {
             reportDamage = true;
             MissionWeapon missionWeapon = weapon;

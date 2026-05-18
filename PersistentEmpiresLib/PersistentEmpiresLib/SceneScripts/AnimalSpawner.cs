@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Data;
+using PersistentEmpiresLib.Data;
 using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using System;
@@ -72,9 +72,9 @@ namespace PersistentEmpiresLib.SceneScripts
             this.NeededReceipt = this.ParseReceipts(this.NeededItemRecipies);
             this.DropReceipt = this.ParseReceipts(this.DropItemRecipies);
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Animal Spawner";
+            return new TextObject("Animal Spawner");
         }
         public void RemoveSpawnedAnimal(Agent animal)
         {
@@ -161,7 +161,7 @@ namespace PersistentEmpiresLib.SceneScripts
             }
             if (userAgent.IsMine) PEInformationManager.StopCounter();
         }
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             if (GameNetwork.IsServer)
             {

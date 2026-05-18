@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Factions;
+using PersistentEmpiresLib.Factions;
 using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.NetworkMessages.Server;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
@@ -23,8 +23,8 @@ namespace PersistentEmpiresLib.SceneScripts
         public int CaptureDuration = 5;
         public string CaptureItem = "pe_banner";
 
-        protected override bool LockUserFrames { get => false; }
-        protected override bool LockUserPositions { get => false; }
+        public override bool LockUserFrames { get => false; }
+        public override bool LockUserPositions { get => false; }
 
         public long UseStartedAt { get; private set; }
         public long UseWillEndAt { get; private set; }
@@ -113,9 +113,9 @@ namespace PersistentEmpiresLib.SceneScripts
 
         }
 
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Castle Banner";
+            return new TextObject("Castle Banner");
         }
 
         public override void OnUseStopped(Agent userAgent, bool isSuccessful, int preferenceIndex)
@@ -155,7 +155,7 @@ namespace PersistentEmpiresLib.SceneScripts
             userAgent.ClearTargetFrame();
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             if (GameNetwork.IsServer)
             {

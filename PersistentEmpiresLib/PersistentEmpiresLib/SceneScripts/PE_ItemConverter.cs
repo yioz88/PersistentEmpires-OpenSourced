@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using System;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -24,14 +24,14 @@ namespace PersistentEmpiresLib.SceneScripts
         public int RequiredSkill = 10;
         public bool HideItemOnAnimation = false;
         private EquipmentIndex HiddenItemIndex = EquipmentIndex.None;
-        protected override bool LockUserFrames
+        public override bool LockUserFrames
         {
             get
             {
                 return true;
             }
         }
-        protected override bool LockUserPositions
+        public override bool LockUserPositions
         {
             get
             {
@@ -39,7 +39,7 @@ namespace PersistentEmpiresLib.SceneScripts
             }
         }
 
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
             return this.Name;
         }
@@ -132,7 +132,7 @@ namespace PersistentEmpiresLib.SceneScripts
             userAgent.ClearTargetFrame();
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             if (GameNetwork.IsServer)
             {

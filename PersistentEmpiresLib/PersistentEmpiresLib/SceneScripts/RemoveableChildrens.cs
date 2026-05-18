@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.SceneScripts.Interfaces;
+using PersistentEmpiresLib.SceneScripts.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Engine;

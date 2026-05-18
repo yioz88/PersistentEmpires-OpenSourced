@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
+using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
@@ -21,15 +21,15 @@ namespace PersistentEmpiresLib.SceneScripts
             descriptionMessage.SetTextVariable("KEY", HyperlinkTexts.GetKeyHyperlinkText(HotKeyManager.GetHotKeyId("CombatHotKeyCategory", 13)));
             base.DescriptionMessage = descriptionMessage;
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Bank";
+            return new TextObject("Bank");
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
 
-            base.OnUse(userAgent);
+            base.OnUse(userAgent, preferenceIndex);
             if (GameNetwork.IsServer)
             {
                 this.bankingComponent.OpenBankForPeer(userAgent.MissionPeer.GetNetworkPeer(), this);

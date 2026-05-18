@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
+using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using TaleWorlds.MountAndBlade;
 
 namespace PersistentEmpiresLib.SceneScripts

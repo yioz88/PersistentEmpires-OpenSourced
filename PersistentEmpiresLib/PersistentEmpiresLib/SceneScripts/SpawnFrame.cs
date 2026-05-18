@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
+using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using TaleWorlds.MountAndBlade;
 
 namespace PersistentEmpiresLib.SceneScripts
@@ -11,12 +11,29 @@ namespace PersistentEmpiresLib.SceneScripts
 
         public PE_CastleBanner GetCastleBanner()
         {
-            if (!Mission.Current.GetMissionBehavior<CastlesBehavior>().castles.ContainsKey(this.CastleIndex)) return null;
-            return Mission.Current.GetMissionBehavior<CastlesBehavior>().castles[this.CastleIndex];
+            try
+            {
+                CastlesBehavior castlesBehavior = Mission.Current?.GetMissionBehavior<CastlesBehavior>();
+                if (castlesBehavior == null || castlesBehavior.castles == null)
+                {
+                    return null;
+                }
+                if (!castlesBehavior.castles.ContainsKey(this.CastleIndex))
+                {
+                    return null;
+                }
+                return castlesBehavior.castles[this.CastleIndex];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public bool CanPeerSpawnHere(NetworkCommunicator peer)
         {
+            if (peer == null) return false;
+            
             PersistentEmpireRepresentative persistentEmpireRepresentative = peer.GetComponent<PersistentEmpireRepresentative>();
             if (persistentEmpireRepresentative == null) return false;
             if (persistentEmpireRepresentative.GetFaction() == null)

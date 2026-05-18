@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Data;
+using PersistentEmpiresLib.Data;
 using PersistentEmpiresLib.Factions;
 using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
@@ -76,8 +76,8 @@ namespace PersistentEmpiresLib.SceneScripts
         private static readonly ActionIndexCache act_pickup_from_left_up_horseback_end = ActionIndexCache.Create("act_pickup_from_left_up_horseback_end");
         private static readonly ActionIndexCache act_pickup_from_left_up_horseback_left_begin = ActionIndexCache.Create("act_pickup_from_left_up_horseback_left_begin");
         private static readonly ActionIndexCache act_pickup_from_left_up_horseback_left_end = ActionIndexCache.Create("act_pickup_from_left_up_horseback_left_end");
-        protected override bool LockUserFrames { get => false; }
-        protected override bool LockUserPositions { get => false; }
+        public override bool LockUserFrames { get => false; }
+        public override bool LockUserPositions { get => false; }
 
         private string GenerateId()
         {
@@ -169,9 +169,9 @@ namespace PersistentEmpiresLib.SceneScripts
             return this.ValidateValues();
         }
 
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Use Inventory";
+            return new TextObject("Use Inventory");
         }
         public PE_CastleBanner GetCastleBanner()
         {
@@ -191,9 +191,9 @@ namespace PersistentEmpiresLib.SceneScripts
             // userAgent.StopUsingGameObjectMT(true);            
         }        
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
-            base.OnUse(userAgent);
+            base.OnUse(userAgent, preferenceIndex);
             Debug.Print("[USING LOG] AGENT USE " + this.GetType().Name + " ID " + this.InventoryId + " PLAYER " + userAgent.MissionPeer.DisplayedName);
             if (this.GameEntity == null || this.InteractionEntity == null) return;
 

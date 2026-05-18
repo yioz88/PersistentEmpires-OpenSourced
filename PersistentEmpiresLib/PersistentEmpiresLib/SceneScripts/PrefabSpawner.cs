@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using PersistentEmpiresLib.SceneScripts.Interfaces;
 using System.Collections.Generic;
@@ -110,14 +110,14 @@ namespace PersistentEmpiresLib.SceneScripts
             this.SpawnedPrefabs = new List<GameEntity>();
             this.StrayEntity = new Dictionary<GameEntity, IStray>();
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Siege Workshop";
+            return new TextObject("Siege Workshop");
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
-            base.OnUse(userAgent);
+            base.OnUse(userAgent, preferenceIndex);
             userAgent.StopUsingGameObjectMT(true);
             if (GameNetwork.IsServer)
             {

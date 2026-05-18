@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Data;
+using PersistentEmpiresLib.Data;
 using PersistentEmpiresLib.Factions;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using PersistentEmpiresLib.SceneScripts.Interfaces;

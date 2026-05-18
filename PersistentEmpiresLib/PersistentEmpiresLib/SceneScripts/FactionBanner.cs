@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using System;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;

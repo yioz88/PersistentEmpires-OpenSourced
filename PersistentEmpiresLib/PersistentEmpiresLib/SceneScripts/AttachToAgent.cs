@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.SceneScripts.Interfaces;
 using System;
 using System.Reflection;
@@ -127,9 +127,9 @@ namespace PersistentEmpiresLib.SceneScripts
             this.AttachToAgentAux(attachedTo);
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
-            base.OnUse(userAgent);
+            base.OnUse(userAgent, preferenceIndex);
             Debug.Print("[USING LOG] AGENT USING " + this.GetType().Name);
             if (this.AttachedTo == null)
             {
@@ -163,9 +163,9 @@ namespace PersistentEmpiresLib.SceneScripts
             this.AttachedTo = attachableAgent;
         }
 
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Attach";
+            return new TextObject("Attach");
         }
 
         public bool IsStray()
@@ -207,7 +207,7 @@ namespace PersistentEmpiresLib.SceneScripts
             }*/
         }
 
-        protected override bool OnHit(Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
+        protected bool OnHit(Agent victimAgent, Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
         {
             reportDamage = true;
             MissionWeapon missionWeapon = weapon;

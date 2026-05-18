@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using System;
 using TaleWorlds.Core;
@@ -19,14 +19,14 @@ namespace PersistentEmpiresLib.SceneScripts
 
         private long UseStartedAt = 0;
         private long UseWillEndAt = 0;
-        protected override bool LockUserFrames
+        public override bool LockUserFrames
         {
             get
             {
                 return false;
             }
         }
-        protected override bool LockUserPositions
+        public override bool LockUserPositions
         {
             get
             {
@@ -81,9 +81,9 @@ namespace PersistentEmpiresLib.SceneScripts
             }
             return base.GetTickRequirement();
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Bed";
+            return new TextObject("Bed");
         }
 
         public override void OnUseStopped(Agent userAgent, bool isSuccessful, int preferenceIndex)
@@ -94,8 +94,12 @@ namespace PersistentEmpiresLib.SceneScripts
             {
                 if (GameNetwork.IsServer)
                 {
-                    NetworkCommunicator peer = userAgent.MissionPeer.GetNetworkPeer();
-                    PersistentEmpireRepresentative persistentEmpireRepresentative = peer.GetComponent<PersistentEmpireRepresentative>();
+                    NetworkCommunicator peer = userAgent?.MissionPeer?.GetNetworkPeer();
+                    PersistentEmpireRepresentative persistentEmpireRepresentative = peer?.GetComponent<PersistentEmpireRepresentative>();
+                    if (persistentEmpireRepresentative == null)
+                    {
+                        return;
+                    }
                     if (this.ForMount == false)
                     {
                         int missingHealth = (int)(userAgent.HealthLimit - userAgent.Health);
@@ -106,7 +110,10 @@ namespace PersistentEmpiresLib.SceneScripts
                     }
                     else
                     {
-                        userAgent.MountAgent.Health = userAgent.MountAgent.HealthLimit;
+                        if (userAgent.MountAgent != null)
+                        {
+                            userAgent.MountAgent.Health = userAgent.MountAgent.HealthLimit;
+                        }
                     }
                 }
             }
@@ -117,7 +124,7 @@ namespace PersistentEmpiresLib.SceneScripts
             userAgent.ClearTargetFrame();
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             if (GameNetwork.IsServer)
             {
@@ -126,17 +133,22 @@ namespace PersistentEmpiresLib.SceneScripts
                     userAgent.StopUsingGameObjectMT(false);
                     return;
                 }
-                NetworkCommunicator peer = userAgent.MissionPeer.GetNetworkPeer();
-                PersistentEmpireRepresentative persistentEmpireRepresentative = peer.GetComponent<PersistentEmpireRepresentative>();
-                if (persistentEmpireRepresentative.GetHunger() < 15 && this.ForMount == false)
+                NetworkCommunicator peer = userAgent?.MissionPeer?.GetNetworkPeer();
+                PersistentEmpireRepresentative persistentEmpireRepresentative = peer?.GetComponent<PersistentEmpireRepresentative>();
+                if (persistentEmpireRepresentative == null)
                 {
-                    InformationComponent.Instance.SendMessage("You need to eat something", new Color(1f, 0, 0).ToUnsignedInteger(), userAgent.MissionPeer.GetNetworkPeer());
                     userAgent.StopUsingGameObjectMT(false);
                     return;
                 }
-                if (this.ForMount && userAgent.MountAgent.Health < 20)
+                if (persistentEmpireRepresentative.GetHunger() < 15 && this.ForMount == false)
                 {
-                    InformationComponent.Instance.SendMessage("Horse too wounded", new Color(1f, 0, 0).ToUnsignedInteger(), userAgent.MissionPeer.GetNetworkPeer());
+                    InformationComponent.Instance.SendMessage("You need to eat something", new Color(1f, 0, 0).ToUnsignedInteger(), peer);
+                    userAgent.StopUsingGameObjectMT(false);
+                    return;
+                }
+                if (this.ForMount && (userAgent.MountAgent == null || userAgent.MountAgent.Health < 20))
+                {
+                    InformationComponent.Instance.SendMessage("Horse too wounded", new Color(1f, 0, 0).ToUnsignedInteger(), peer);
                     userAgent.StopUsingGameObjectMT(false);
                     return;
                 }

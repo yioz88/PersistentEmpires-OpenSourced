@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.NetworkMessages.Server;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using PersistentEmpiresLib.SceneScripts.Interfaces;
@@ -103,7 +103,7 @@ namespace PersistentEmpiresLib.SceneScripts
                 InformationManager.HideTooltip();
             }
         }
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             base.OnUse(userAgent);
             if (GameNetwork.IsServer)
@@ -111,13 +111,24 @@ namespace PersistentEmpiresLib.SceneScripts
                 Debug.Print("[USING LOG] AGENT USE " + this.GetType().Name);
                 userAgent.StopUsingGameObjectMT(false);
 
+                if (userAgent?.MissionPeer == null || userAgent.MissionPeer.GetNetworkPeer() == null)
+                {
+                    return;
+                }
+
                 NetworkCommunicator player = userAgent.MissionPeer.GetNetworkPeer();
                 PersistentEmpireRepresentative persistentEmpireRepresentative = player.GetComponent<PersistentEmpireRepresentative>();
                 if (persistentEmpireRepresentative == null) return;
                 if (userAgent.MountAgent != null)
                 {
-                    // Sell Mount.
                     ItemObject horseItem = userAgent.MountAgent.SpawnEquipment[EquipmentIndex.Horse].Item;
+                    if (horseItem == null)
+                    {
+                        Debug.Print("[HorseMarket] Horse item is null, cannot sell.", 0, Debug.DebugColor.Red);
+                        InformationComponent.Instance.SendMessage("Invalid horse data.", new Color(1f, 0f, 0f).ToUnsignedInteger(), player);
+                        return;
+                    }
+                    
                     Debug.Print("HORSE ITEM IS " + horseItem.StringId);
                     if (horseItem.StringId != this.HorseId)
                     {
@@ -129,10 +140,8 @@ namespace PersistentEmpiresLib.SceneScripts
                         InformationComponent.Instance.SendMessage("Horse is injured. You can't sell it", new Color(1f, 0f, 0f).ToUnsignedInteger(), player);
                         return;
                     }
-                    // Agent horse = userAgent.MountAgent;
-                    // userAgent.Mount(horse); // Unmount first.
+                    
                     AgentHelpers.RespawnAgentOnPlace(userAgent);
-                    // horse.FadeOut(true, false);
                     persistentEmpireRepresentative.GoldGain(this.SellPrice());
                     this.UpdateReserve(this.Stock + 1 > 1000 ? 1000 : this.Stock + 1);
                     SaveSystemBehavior.HandleCreateOrSaveHorseMarket(this);
@@ -152,15 +161,22 @@ namespace PersistentEmpiresLib.SceneScripts
                         InformationComponent.Instance.SendMessage("You need " + this.BuyPrice() + " gold to buy a horse.", new Color(1f, 0f, 0f).ToUnsignedInteger(), player);
                         return;
                     }
+                    
+                    if (this.HorseItem == null)
+                    {
+                        Debug.Print("[HorseMarket] HorseItem is null!", 0, Debug.DebugColor.Red);
+                        return;
+                    }
+                    
                     ItemRosterElement itemRosterElement = new ItemRosterElement(this.HorseItem, 0, null);
                     ItemRosterElement harnessElement = this.HorseHarness == "" ? default(ItemRosterElement) : new ItemRosterElement(MBObjectManager.Instance.GetObject<ItemObject>(this.HorseHarness), 1);
                     MatrixFrame matrixFrame = base.GameEntity.GetGlobalFrame();
                     Mission.Current.SpawnMonster(itemRosterElement, harnessElement, userAgent.Position, matrixFrame.rotation.f.AsVec2);
+                    
                     PE_TaxHandler taxHandler = this.GameEntity.GetFirstScriptOfType<PE_TaxHandler>();
                     if (taxHandler != null && taxHandler.CastleId != -1) taxHandler.AddTaxFeeToMoneyChest((this.BuyPrice() * taxHandler.TaxPercentage) / 100);
+                    
                     this.UpdateReserve(this.Stock - 1);
-
-
                     SaveSystemBehavior.HandleCreateOrSaveHorseMarket(this);
                     GameNetwork.BeginBroadcastModuleEvent();
                     GameNetwork.WriteMessage(new HorseMarketSetReserve(this, this.Stock));
@@ -168,12 +184,12 @@ namespace PersistentEmpiresLib.SceneScripts
                 }
             }
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Horse Market";
+            return new TextObject("Horse Market");
         }
 
-        protected override bool OnHit(Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
+        protected bool OnHit(Agent victimAgent, Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
         {
             reportDamage = false;
             if (attackerAgent == null) return false;

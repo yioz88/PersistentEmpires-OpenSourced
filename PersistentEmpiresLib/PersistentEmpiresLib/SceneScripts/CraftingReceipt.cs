@@ -1,4 +1,4 @@
-﻿using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade;
 
 namespace PersistentEmpiresLib.SceneScripts
 {

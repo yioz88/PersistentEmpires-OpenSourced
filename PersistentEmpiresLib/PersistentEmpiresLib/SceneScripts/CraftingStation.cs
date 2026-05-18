@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
+using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -60,22 +60,73 @@ namespace PersistentEmpiresLib.SceneScripts
         public List<Craftable> ParseStringToCraftables(string allCraftableReceipt, int tier, int requiredEngineering)
         {
             List<Craftable> craftables = new List<Craftable>();
-            if (allCraftableReceipt == "") return craftables;
-            foreach (string receipt in allCraftableReceipt.Split('|'))
+            if (string.IsNullOrEmpty(allCraftableReceipt)) return craftables;
+            
+            string[] receipts = allCraftableReceipt.Split('|');
+            foreach (string receipt in receipts)
             {
-                if (receipt.Trim() == "") continue;
-                string leftSide = receipt.Split('=')[0];
-                string rightSide = receipt.Split('=')[1];
-                List<CraftingRecipe> cReceipts = new List<CraftingRecipe>();
-                foreach (string r in rightSide.Split(','))
+                if (string.IsNullOrWhiteSpace(receipt)) continue;
+                
+                string[] sides = receipt.Split('=');
+                if (sides.Length < 2)
                 {
-                    string itemId = r.Split('*')[0];
-                    int count = int.Parse(r.Split('*')[1]);
+                    Debug.Print("[PE_CraftingStation] Invalid crafting receipt format: " + receipt, 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                string leftSide = sides[0].Trim();
+                string rightSide = sides[1].Trim();
+                List<CraftingRecipe> cReceipts = new List<CraftingRecipe>();
+                
+                string[] rightParts = rightSide.Split(',');
+                foreach (string r in rightParts)
+                {
+                    if (string.IsNullOrWhiteSpace(r)) continue;
+                    
+                    string[] itemParts = r.Split('*');
+                    if (itemParts.Length < 2)
+                    {
+                        Debug.Print("[PE_CraftingStation] Invalid recipe item format: " + r, 0, Debug.DebugColor.Yellow);
+                        continue;
+                    }
+                    
+                    string itemId = itemParts[0].Trim();
+                    if (!int.TryParse(itemParts[1].Trim(), out int count))
+                    {
+                        Debug.Print("[PE_CraftingStation] Invalid count for item: " + itemId, 0, Debug.DebugColor.Yellow);
+                        continue;
+                    }
+                    
                     cReceipts.Add(new CraftingRecipe(itemId, count));
                 }
-                int craftTime = int.Parse(leftSide.Split('*')[0]);
-                string craftableItemId = leftSide.Split('*')[1];
-                int outputAmount = int.Parse(leftSide.Split('*')[2]);
+                
+                if (cReceipts.Count == 0)
+                {
+                    Debug.Print("[PE_CraftingStation] No valid recipes in receipt: " + receipt, 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                string[] leftParts = leftSide.Split('*');
+                if (leftParts.Length < 3)
+                {
+                    Debug.Print("[PE_CraftingStation] Invalid left side format: " + leftSide, 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                if (!int.TryParse(leftParts[0].Trim(), out int craftTime))
+                {
+                    Debug.Print("[PE_CraftingStation] Invalid craft time: " + leftParts[0], 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
+                string craftableItemId = leftParts[1].Trim();
+                
+                if (!int.TryParse(leftParts[2].Trim(), out int outputAmount))
+                {
+                    Debug.Print("[PE_CraftingStation] Invalid output amount: " + leftParts[2], 0, Debug.DebugColor.Yellow);
+                    continue;
+                }
+                
                 Craftable craftable = new Craftable(cReceipts, craftableItemId, outputAmount, tier, requiredEngineering, craftTime, this.RelevantSkillId);
                 craftables.Add(craftable);
             }
@@ -124,14 +175,14 @@ namespace PersistentEmpiresLib.SceneScripts
             this.craftingComponent = Mission.Current.GetMissionBehavior<CraftingComponent>();
             this.LoadCraftables();
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Crafting Station Named As " + this.StationName;
+            return new TextObject("Crafting Station Named As " + this.StationName);
         }
 
 
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             Debug.Print("[USING LOG] AGENT USE " + this.GetType().Name);
             if (!base.IsUsable(userAgent))

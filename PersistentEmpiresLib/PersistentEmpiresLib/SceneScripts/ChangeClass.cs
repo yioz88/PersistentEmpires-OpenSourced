@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using System;
 using System.Linq;
@@ -26,11 +26,11 @@ namespace PersistentEmpiresLib.SceneScripts
         public long UseStartedAt { get; private set; }
         public long UseWillEndAt { get; private set; }
 
-        protected override bool LockUserFrames
+        public override bool LockUserFrames
         {
             get => false;
         }
-        protected override bool LockUserPositions
+        public override bool LockUserPositions
         {
             get => false;
         }
@@ -107,19 +107,37 @@ namespace PersistentEmpiresLib.SceneScripts
         }
         public int GetHeroClassIndex()
         {
-            return MBObjectManager.Instance.GetObjectTypeList<MultiplayerClassDivisions.MPHeroClass>().Select((value, index) => new { value, index }).First((a) => a.value.HeroCharacter.StringId == this.ClassId).index;
+            var mpHeroClasses = MBObjectManager.Instance.GetObjectTypeList<MultiplayerClassDivisions.MPHeroClass>().ToList();
+            for (int i = 0; i < mpHeroClasses.Count; i++)
+            {
+                if (mpHeroClasses[i].HeroCharacter.StringId == this.ClassId)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Change Class";
+            return new TextObject("Change Class");
         }
         public PE_CastleBanner GetCastleBanner()
         {
-            // FactionsBehavior factionBehavior = Mission.Current.GetMissionBehavior<FactionsBehavior>();
-            CastlesBehavior castleBehaviors = Mission.Current.GetMissionBehavior<CastlesBehavior>();
-            if (castleBehaviors.castles.ContainsKey(this.CastleId))
+            try
             {
-                return castleBehaviors.castles[this.CastleId];
+                CastlesBehavior castleBehaviors = Mission.Current?.GetMissionBehavior<CastlesBehavior>();
+                if (castleBehaviors == null || castleBehaviors.castles == null)
+                {
+                    return null;
+                }
+                if (castleBehaviors.castles.ContainsKey(this.CastleId))
+                {
+                    return castleBehaviors.castles[this.CastleId];
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Print("[PE_ChangeClass] GetCastleBanner error: " + e.Message, 0, Debug.DebugColor.Red);
             }
             return null;
         }
@@ -206,7 +224,7 @@ namespace PersistentEmpiresLib.SceneScripts
             userAgent.ClearTargetFrame();
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
 
             if (GameNetwork.IsServer)

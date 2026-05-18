@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Helpers;
+using PersistentEmpiresLib.Helpers;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
@@ -62,8 +62,8 @@ namespace PersistentEmpiresLib.SceneScripts
         private static readonly ActionIndexCache act_pickup_from_left_up_horseback_end = ActionIndexCache.Create("act_pickup_from_left_up_horseback_end");
         private static readonly ActionIndexCache act_pickup_from_left_up_horseback_left_begin = ActionIndexCache.Create("act_pickup_from_left_up_horseback_left_begin");
         private static readonly ActionIndexCache act_pickup_from_left_up_horseback_left_end = ActionIndexCache.Create("act_pickup_from_left_up_horseback_left_end");
-        protected override bool LockUserFrames { get => false; }
-        protected override bool LockUserPositions { get => false; }
+        public override bool LockUserFrames { get => false; }
+        public override bool LockUserPositions { get => false; }
         protected override void OnInit()
         {
             base.OnInit();
@@ -72,9 +72,9 @@ namespace PersistentEmpiresLib.SceneScripts
             descriptionMessage.SetTextVariable("KEY", HyperlinkTexts.GetKeyHyperlinkText(HotKeyManager.GetHotKeyId("CombatHotKeyCategory", 13)));
             base.DescriptionMessage = descriptionMessage;
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Money Bag";
+            return new TextObject("Money Bag");
         }
         public override ScriptComponentBehavior.TickRequirement GetTickRequirement()
         {
@@ -115,10 +115,10 @@ namespace PersistentEmpiresLib.SceneScripts
                 }
             }
         }
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             if (base.HasUser) return;
-            base.OnUse(userAgent);
+            base.OnUse(userAgent, preferenceIndex);
             // userAgent.StopUsingGameObjectMT(true, true, false);
             if (GameNetwork.IsServer)
             {

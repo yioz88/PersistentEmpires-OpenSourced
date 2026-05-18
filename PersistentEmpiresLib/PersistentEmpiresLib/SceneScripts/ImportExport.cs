@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
+using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
 using System.Collections.Generic;
 using System.Xml;
 using TaleWorlds.Core;
@@ -62,12 +62,12 @@ namespace PersistentEmpiresLib.SceneScripts
         {
             return this.goodItems;
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Import/Export";
+            return new TextObject("Import/Export");
         }
 
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             Debug.Print("[USING LOG] AGENT USE " + this.GetType().Name);
 

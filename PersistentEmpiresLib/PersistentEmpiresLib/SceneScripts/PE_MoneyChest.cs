@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.Factions;
+using PersistentEmpiresLib.Factions;
 using PersistentEmpiresLib.Helpers;
 using PersistentEmpiresLib.NetworkMessages.Server;
 using PersistentEmpiresLib.PersistentEmpiresMission.MissionBehaviors;
@@ -28,9 +28,9 @@ namespace PersistentEmpiresLib.SceneScripts
             descriptionMessage.SetTextVariable("KEY", HyperlinkTexts.GetKeyHyperlinkText(HotKeyManager.GetHotKeyId("CombatHotKeyCategory", 13)));
             base.DescriptionMessage = descriptionMessage;
         }
-        public override string GetDescriptionText(GameEntity gameEntity = null)
+        public override TextObject GetDescriptionText(WeakGameEntity gameEntity)
         {
-            return "Money Chest";
+            return new TextObject("Money Chest");
         }
         public void UpdateGold(long gold)
         {
@@ -55,7 +55,7 @@ namespace PersistentEmpiresLib.SceneScripts
             return destructComponent.IsBroken;
         }
 
-        protected override bool OnHit(Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
+        protected bool OnHit(Agent victimAgent, Agent attackerAgent, int damage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage)
         {
             reportDamage = false;
             if (this.Lockpickable == false) return false;
@@ -151,14 +151,14 @@ namespace PersistentEmpiresLib.SceneScripts
         {
             PE_MoneyChest.OnMoneyChestAccessed(this);
         }
-        public override void OnUse(Agent userAgent)
+        public void OnUse(Agent userAgent)
         {
             if (!base.IsUsable(userAgent))
             {
                 userAgent.StopUsingGameObjectMT(false);
                 return;
             }
-            base.OnUse(userAgent);
+            base.OnUse(userAgent, preferenceIndex);
             if (userAgent.IsMine && OnMoneyChestAccessed != null)
             {
                 OnMoneyChestAccessed(this);

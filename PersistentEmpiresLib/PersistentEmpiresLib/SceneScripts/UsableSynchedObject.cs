@@ -1,4 +1,4 @@
-﻿using PersistentEmpiresLib.NetworkMessages.Server;
+using PersistentEmpiresLib.NetworkMessages.Server;
 using System.Reflection;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
