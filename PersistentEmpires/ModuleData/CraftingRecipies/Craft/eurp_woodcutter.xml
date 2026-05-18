@@ -1,0 +1,13 @@
+<Recipies>
+    <Tier1Craftings>
+        2*pe_wooden_plank*2=pe_hardwood*1|3*dv_cart_packed*1=pe_wooden_plank*10,pe_hardwood*2|3*pe_boat_packed*1=pe_wooden_plank*10,pe_hardwood*2|3*pe_carriage_packed*1=pe_wooden_plank*10,pe_hardwood*2|3*pe_lifering*1=pe_hardwood*3|1*pe_bd_oil_lamp_for_table*1=pe_merchandise_flax*3
+    </Tier1Craftings>
+    <Tier2Craftings>
+        5*dv_cart_tank_packed*1=pe_wooden_plank*10,pe_hardwood*10,pe_iron_ingot*5|5*dv_firecart_packed*1=pe_wooden_plank*10,pe_hardwood*10,pe_iron_ingot*15|5*pe_ship_packed*1=pe_wooden_plank*10,pe_hardwood*10,pe_iron_ingot*5,pe_cloth*6|5*pe_mangonel_packed*1=pe_wooden_plank*10,pe_hardwood*10,pe_cloth*10,pe_steel_ingot*5|5*grapeshot_stack*1=pe_stone*2|5*grapeshot_fire_stack*1=pe_stone*2,pe_bd_oil_lamp_for_table*1|2*pe_bd_oil_lamp_for_table*2=pe_merchandise_flax*6|5*pe_ship2_packed*1=pe_wooden_plank*10,pe_hardwood*10,pe_steel_ingot*10,pe_cloth*10
+    </Tier2Craftings>
+    <Tier3Craftings>  
+		15*pe_warship_packed*1=pe_goldore*10,pe_hardwood*10,pe_goldore*5,pe_thamaskene_steel*10| 
+		10*pe_onager_packed*1=pe_wooden_plank*10,pe_hardwood*10,pe_iron_ingot*5,pe_thamaskene_steel*5|
+		3*pe_bd_oil_lamp_for_table*3=pe_merchandise_flax*9 
+    </Tier3Craftings>
+</Recipies>
