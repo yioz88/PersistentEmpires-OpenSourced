@@ -1,0 +1,33 @@
+<Prefab>
+  <Constants>
+
+  </Constants>
+  <Window>
+    <MultiplayerMissionMarkerListPanel WidthSizePolicy="CoverChildren"
+      HeightSizePolicy="CoverChildren" Distance="@Distance"
+      FarAlphaTarget="1" FarDistanceCutoff="100" IsMarkerEnabled="true"
+      StackLayout.LayoutMethod="VerticalBottomToTop" MarkerType="@MarkerType"
+      PeerWidget="PeerWidget" Position="@ScreenPosition" IsSpawnFlag="false">
+      <Children>
+        <Widget Id="PeerWidget" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+          HorizontalAlignment="Center" VerticalAlignment="Center">
+          <Children>
+            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteHoverBegin" Command.HoverEnd="ExecuteHoverEnd">
+              <Children>
+                <ListPanel StackLayout.LayoutMethod="VerticalTopToBottom" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
+                  <Children>
+                    <MaskedTextureWidget DataSource="{BannerImage}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="64" SuggestedHeight="92" MarginTop="2" MarginBottom="6" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="PE.BannerButtonBrush" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" />
+                    <TextWidget Id="NameTextWidget" WidthSizePolicy="Fixed" SuggestedWidth="400"
+                          HeightSizePolicy="CoverChildren" HorizontalAlignment="Center"
+                          VerticalAlignment="Center" ClipContents="false" Brush.FontSize="22"
+                          OverrideDefaultStateSwitchingEnabled="true" Text="@CastleName" />
+                  </Children>
+                </ListPanel>
+              </Children>
+            </ButtonWidget>
+          </Children>
+        </Widget>
+      </Children>
+    </MultiplayerMissionMarkerListPanel>
+  </Window>
+</Prefab>
