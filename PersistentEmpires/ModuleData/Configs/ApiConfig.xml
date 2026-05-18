@@ -1,0 +1,4 @@
+<ApiConfig>
+	<Port>3169</Port>
+	<SecretKey>4813387be7f0382055b80a9a7547d5ca3e00e50c13c545e268c22fc893ec1fa8976e6f95ac0c40e313ff4cb62eba26cd1c380ac0dfb161be344edd65613c32d0</SecretKey>
+</ApiConfig>
