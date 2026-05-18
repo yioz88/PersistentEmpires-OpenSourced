@@ -1,0 +1,68 @@
+<Prefab>
+  <Window>
+    <Widget HorizontalAlignment="Center" HeightSizePolicy="Fixed" VerticalAlignment="Center" WidthSizePolicy="Fixed" SuggestedHeight="900" SuggestedWidth="820" MarginBottom="48" MarginTop="48" MarginLeft="28" MarginRight="28">
+      <Children>
+        <Standard.Window Parameter.Title="@WindowTitle">
+          <Children>
+            <ListPanel StackLayout.LayoutMethod="VerticalTopToBottom" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+              <Children>
+                <ListPanel MarginTop="36" MarginLeft="20" MarginRight="20" StackLayout.LayoutMethod="HorizontalLeftToRight" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+                  <Children>
+                    <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="48" MarginRight="8" Brush="WideButton.Flat" Command.Click="ExecuteSwitchMilitaryTab">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="MPLobby.PlayButton.Text" Brush.FontSize="17" Text="@TabMilitaryLabel" />
+                      </Children>
+                    </ButtonWidget>
+                    <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="48" MarginLeft="8" Brush="WideButton.Flat" Command.Click="ExecuteSwitchNobleTab">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="MPLobby.PlayButton.Text" Brush.FontSize="17" Text="@TabNobleLabel" />
+                      </Children>
+                    </ButtonWidget>
+                  </Children>
+                </ListPanel>
+
+                <Widget MarginTop="16" MarginLeft="12" MarginRight="12" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" IsVisible="@ShowMilitarySection" Sprite="SPGeneral\GameMenu\panel_frame">
+                  <Children>
+                    <ListPanel MarginTop="14" MarginBottom="16" MarginLeft="16" MarginRight="16" StackLayout.LayoutMethod="VerticalTopToBottom" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="18" Text="@MilitaryRankLine" />
+                        <TextWidget MarginTop="10" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="17" Brush.FontColor="#B2EBF2FF" Text="@MilitaryMeritLine" />
+                        <TextWidget MarginTop="6" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="17" Text="@MilitaryDenarLine" />
+                        <ButtonWidget MarginTop="18" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="54" Brush="WideButton.Flat" Command.Click="ExecutePromoteMilitary" IsEnabled="@MilitaryPromoteEnabled">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="MPLobby.PlayButton.Text" Brush.FontSize="18" Text="@MilitaryPromoteButtonText" />
+                          </Children>
+                        </ButtonWidget>
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+
+                <Widget MarginTop="16" MarginLeft="12" MarginRight="12" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" IsVisible="@ShowNobleSection" Sprite="SPGeneral\GameMenu\panel_frame">
+                  <Children>
+                    <ListPanel MarginTop="14" MarginBottom="16" MarginLeft="16" MarginRight="16" StackLayout.LayoutMethod="VerticalTopToBottom" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="18" Text="@NobleRankLine" />
+                        <TextWidget MarginTop="10" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="17" Brush.FontColor="#E1BEE7FF" Text="@NobleMeritLine" />
+                        <TextWidget MarginTop="6" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="17" Text="@NobleDenarLine" />
+                        <TextWidget MarginTop="6" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="17" Text="@NobleStellarLine" />
+                        <TextWidget MarginTop="6" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="17" Brush.FontColor="#FFCC80FF" Text="@NobleMilitaryGateLine" />
+                        <ButtonWidget MarginTop="18" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="54" Brush="WideButton.Flat" Command.Click="ExecutePromoteNoble" IsEnabled="@NoblePromoteEnabled">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="MPLobby.PlayButton.Text" Brush.FontSize="18" Text="@NoblePromoteButtonText" />
+                          </Children>
+                        </ButtonWidget>
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+
+                <TextWidget MarginTop="18" MarginBottom="10" MarginLeft="20" MarginRight="20" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush.FontSize="14" Brush.FontColor="#B8A88CFF" Text="@HintText" HorizontalAlignment="Center" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </Standard.Window>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>
